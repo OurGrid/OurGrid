@@ -1,0 +1,19 @@
+[
+	ServerName = "xmpp.ourgrid.org";
+	OS="linux";
+
+	workers={w1, w2, w3, w4};
+
+	w1=[
+		UserName = "username1";
+	];
+	w2=[
+		UserName = "username2";
+	];
+	w3=[
+		UserName = "username3";
+	];
+	w4=[
+		UserName = "username4";
+	];
+]

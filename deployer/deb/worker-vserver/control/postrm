@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+if [ "$1" = "purge" ]; then
+	update-rc.d worker-vserver remove
+	rm -rf /etc/ourgrid/worker-vserver*
+	rm -rf /etc/ourgrid/vserver_images
+	rm -rf /var/log/ourgrid/worker-vserver*.log*
+fi
+
+exit 0

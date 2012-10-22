@@ -1,0 +1,10 @@
+[
+	Name = "Diff Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = { "file1.txt", "file2.txt" };
+	Executable = "diff";
+	Arguments = "file1.txt file2.txt";
+	Requirements = other.personalisedAttributedNobodyUses == 42;
+	Rank = 0; 
+]

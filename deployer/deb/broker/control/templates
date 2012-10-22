@@ -1,0 +1,19 @@
+Template: ${package.name}/username
+Type: string
+Default: 
+Description: xmpp.ourgrid.username:
+
+Template: ${package.name}/servername
+Type: string
+Default: 
+Description: xmpp.ourgrid.servername:
+
+Template: ${package.name}/password
+Type: string
+Default: 
+Description: xmpp.ourgrid.password:
+
+Template: ${package.name}/brokeraddress
+Type: string
+Default: 
+Description: broker.peer.address:

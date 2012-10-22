@@ -1,0 +1,7 @@
+job : 
+label 	: SimpleMPJob
+requirements : ( num_procs == 2 )
+
+task :
+remote 	: echo "2" > outputMP-1.1; $RSH_CMD $PROC0 "echo a" >> outputMP-1.1; $RSH_CMD $PROC1 "echo a" >> outputMP-1.1;
+final   : get outputMP-1.1 outputMP-1.1

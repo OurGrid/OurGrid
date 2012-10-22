@@ -1,0 +1,67 @@
+#!/bin/bash
+
+WORKERROOT=/etc/ourgrid/worker-vserver1
+WORKERBASE=/etc/ourgrid/worker-vserver
+VSERVER_IMAGE=vserver_images
+numWorkers=$1
+USERNAME=$2
+SERVERNAME=$3
+PASSWORD=$4
+PEERADDRESS=$5
+IMAGE_FILE=$6
+
+echo $numWorkers
+echo $USERNAME
+echo $SERVERNAME
+echo $PASSWORD
+echo $PEERADDRESS
+
+for i in `seq 2 $numWorkers`
+do 
+	newFolder=${WORKERBASE}${i}
+	mkdir -p $newFolder
+	cp $WORKERROOT/log4j.cfg.xml $newFolder
+	cp $WORKERROOT/worker.properties $newFolder
+	cp $WORKERROOT/worker.spec.properties $newFolder
+	sed -i 's/worker-vserver1.log/worker-vserver'$i'.log/g' $newFolder/log4j.cfg.xml
+	
+	PROPERTIES_FILE=$newFolder/worker.properties
+	SPEC_PATH=$newFolder/worker.spec.properties
+	
+	sed -i 's/{username}/'$USERNAME'_'${i}'/g' $PROPERTIES_FILE
+	sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+	sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+	sed -i 's/{peer_address}/'$PEERADDRESS'/g' $PROPERTIES_FILE
+	sed -i 's/{spec_file_path}/'$SPEC_PATH'/g' $PROPERTIES_FILE
+	
+	#GENERATING CERTIFICATE FILE
+	CERTIFICATE_FILE=$newFolder/certification/mycertificate/mycertificate.cer
+	mkdir -p $newFolder/certification/mycertificate
+	CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME'_'${i} $SERVERNAME $CERTIFICATE_FILE)
+	WORKER_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+	WORKER_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+	echo "" >> $PROPERTIES_FILE
+	echo "commune.publickey="$WORKER_PUBLICKEY >> $PROPERTIES_FILE
+	echo "commune.privatekey="$WORKER_PRIVATEKEY >> $PROPERTIES_FILE
+	echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
+done
+
+PROPERTIES_FILE=$WORKERROOT/worker.properties
+SPEC_PATH=$WORKERROOT/worker.spec.properties
+
+sed -i 's/{username}/'$USERNAME'_1/g' $PROPERTIES_FILE
+sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+sed -i 's/{peer_address}/'$PEERADDRESS'/g' $PROPERTIES_FILE
+sed -i 's/{spec_file_path}/'$SPEC_PATH'/g' $PROPERTIES_FILE
+
+#GENERATING CERTIFICATE FILE
+CERTIFICATE_FILE=$WORKERROOT/certification/mycertificate/mycertificate.cer
+mkdir -p $WORKERROOT/certification/mycertificate
+CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME'_1' $SERVERNAME $CERTIFICATE_FILE)
+WORKER_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+WORKER_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+echo "" >> $PROPERTIES_FILE
+echo "commune.publickey="$WORKER_PUBLICKEY >> $PROPERTIES_FILE
+echo "commune.privatekey="$WORKER_PRIVATEKEY >> $PROPERTIES_FILE
+echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE

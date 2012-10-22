@@ -1,0 +1,10 @@
+[
+	Name = "Java Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = {"../acceptance/broker/Class.class"};
+	Executable = "java";
+	Arguments = "Class";
+	Requirements = ( ( other.sitename == "ucsd" || other.sitename == "lsd" ) && other.mainmemory <= 200 );
+	Rank = 0;
+]

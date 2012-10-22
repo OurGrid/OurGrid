@@ -1,0 +1,27 @@
+job : 
+label 	: RequirementsWindows
+requirements: (os == windows)
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100
+
+task :
+remote 	: sleep 100

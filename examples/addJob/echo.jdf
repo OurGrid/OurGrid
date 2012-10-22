@@ -1,0 +1,7 @@
+job : 
+label 	: EchoJob
+
+task :
+init 	: 
+remote 	: echo Abc
+final   : 

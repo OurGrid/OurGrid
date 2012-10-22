@@ -1,0 +1,23 @@
+[
+	Name = "Parametric Job";
+	Type = "Job";
+	JobType = "Parametric";
+	Executable = "cms_sim.exe";
+	StdInput = "input_PARAM_.txt";
+	StdOutput = "myoutput_PARAM_.txt";
+	StdError = "myerror_PARAM_.txt";
+	Parameters = {raw, d0, d1, d2};
+	NodesCollocation = true;
+	
+	InputSandbox = {
+		"/home/cms/cms_sim.exe",
+		"/home/cms/data/input_PARAM_.txt"
+	};
+	OutputSandbox = {
+		"myoutput_PARAM_.txt",
+		"myerror_PARAM_.txt"
+	};
+	OutputSandboxBaseDestURI = "/tmp";
+	Requirements = other.GlueCEInfoTotalCPUs > 2;
+	Rank = other.GlueCEStateFreeCPUs;
+]

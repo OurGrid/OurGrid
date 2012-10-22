@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" = upgrade ]; then
+	worker stop
+fi
+
+exit 0

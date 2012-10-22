@@ -1,0 +1,8 @@
+workerdefaults:
+
+
+worker:
+ servername: testserver
+ username: testuser
+ os: linux
+ mem: 1024

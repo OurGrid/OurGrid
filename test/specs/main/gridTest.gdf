@@ -1,0 +1,20 @@
+MYGUMP:
+	type : ualinux
+	MEM : 300
+	OS : solaris
+	port : 9874
+	
+	GUM : 
+		Name : xpto1.lsd.ufcg.edu.br
+		port : 9876
+		OS : linux
+	GUM : 
+		Name : xpto2.lsd.ufcg.edu.br
+		port : 9875
+		MEM : 200
+	GUM : 
+		name: xpto3.lsd.ufcg.edu.br
+		type: GRIDSCRIPT
+		RemExec: ssh -x %machine %command
+		CopyFrom: scp %localdir/%file %machine:%remotedir
+		COPYTO: scp %machine:%remotedir/%file %localdir

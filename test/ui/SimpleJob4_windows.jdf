@@ -1,0 +1,8 @@
+job : 
+label 	: SimpleJob4
+
+task :
+init 	: store mytask.bat $STORAGE/mytask-$JOB.bat
+remote 	: "$STORAGE/mytask-$JOB" mytask-$TASK.out
+
+final   : get mytask-$TASK.out mytask-$TASK.bat

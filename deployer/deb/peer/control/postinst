@@ -1,0 +1,44 @@
+#!/bin/bash
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+db_get ${package.name}/username
+USERNAME=$(hostname)
+db_get ${package.name}/servername
+SERVERNAME="xmpp.ourgrid.org"
+db_get ${package.name}/password
+PASSWORD="xmpp-password"
+
+PROPERTIES_FILE=/etc/ourgrid/peer/peer.properties
+
+sed -i 's/{username}/'$USERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+
+
+CERTIFICATE_FILE=/etc/ourgrid/peer/certification/mycertificate/mycertificate.cer
+mkdir -p /etc/ourgrid/peer/certification/mycertificate/
+CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME $SERVERNAME $CERTIFICATE_FILE)
+PEER_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+PEER_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+echo "" >> $PROPERTIES_FILE
+echo "commune.privatekey="$PEER_PRIVATEKEY >> $PROPERTIES_FILE
+echo "commune.publickey="$PEER_PUBLICKEY >> $PROPERTIES_FILE
+echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
+
+#give user "ourgrid" X permissions
+if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then 
+	echo "xhost +si:localuser:ourgrid" >> /etc/profile
+fi	
+
+chmod +x /etc/init.d/peer
+update-rc.d peer defaults
+
+chown ourgrid /usr/bin/peer
+chown ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+update-rc.d peer-start start 20 2 3 4 5 .
+update-rc.d peer-stop stop 20 0 1 6 .
+
+db_purge

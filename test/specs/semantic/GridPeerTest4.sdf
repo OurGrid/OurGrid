@@ -1,0 +1,5 @@
+# Fails because the username is not defined
+WORKERDEFAULTS :
+	WORKER :
+		servername : jabber.org
+		OS : linux

@@ -1,0 +1,5 @@
+# Grid Description File Example
+peer:
+	label: LSD Public Peer
+	username : anonymous
+	servername : parati.lsd.ufcg.edu.br

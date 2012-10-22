@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm -rf /var/log/ourgrid/peer*.log*
+rm -rf /etc/ourgrid/peer
+rm -rf /etc/ourgrid/db/peer
+	
+exit 0

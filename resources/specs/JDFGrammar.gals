@@ -1,0 +1,146 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+
+#Tokens
+JOB
+LABEL
+REQUIREMENTS
+TASK
+INIT
+REMOTE
+FINAL
+CHECK
+IF
+THEN
+ELSE
+ENDIF
+PUT
+STORE
+GET
+string
+none
+NOT
+AND
+OR
+":"
+"("
+")"
+"||"
+"&&"
+"!"
+"="
+"=="
+"!="
+">"
+"<"
+"<="
+">="
+"\n"
+IN_PATH
+IN_CLASSPATH
+VERSION
+#NonTerminals
+<job>
+<defaultTask>
+<label>
+<taskList>
+<definitions>
+<requirements>
+<init>
+<remote>
+<final>
+<check>
+<inputBlocks>
+<inputBlock>
+<inputElse>
+<inputCommands>
+<inputCommand>
+<inCommand>
+<outputBlocks>
+<outputBlock>
+<outputElse>
+<outputCommands>
+<outputCommand>
+<outCommand>
+<expression>
+<expression2>
+<and_Or>
+<expr>
+<expr2>
+<value>
+
+#Grammar
+<job> ::= JOB  ":" <defaultTask> #8 <taskList> #22 ;
+<defaultTask> ::= <label> <requirements> <definitions> ;
+<label> ::= LABEL #26 ":" string #24 "\n"
+	| @ #25 ;
+<taskList> ::= TASK ":" <definitions> #9 <taskList> 
+	| @ ;
+<definitions> ::= <init> <remote> <final> <check> ;
+<requirements> ::= REQUIREMENTS ":" #10 <expression> "\n" #14 
+	| @ ;
+<init> ::= INIT ":" #15 <inputBlocks> #21 
+	| @  ;
+<inputBlocks> ::= <inputBlock> <inputBlocks>
+ 	| none "\n"
+	| @  ;
+<inputBlock> ::= IF #10 <expression> #16 THEN <inputCommand> <inputCommands> <inputElse> ENDIF #12
+	| #17 <inputCommand> <inputCommands> #12 ;
+<inputElse> ::= ELSE #13 <inputCommand> <inputCommands>
+	| @ ;
+<inputCommands> ::= <inputCommand> <inputCommands>
+	| @ #20 ;
+<inputCommand> ::= <inCommand> #26 string #18 string #18 #27 "\n" #19 ;
+<inCommand> ::= PUT #18
+	| STORE #18 ;
+<remote> ::= REMOTE ":" #28 string #4 #27 "\n"
+	| @  ;
+<final> ::= FINAL ":" #15 <outputBlocks> #23
+	| @  ;
+<check> ::= CHECK ":" #28 string #29 #27 "\n"
+	| @	 ;
+<outputBlocks> ::= <outputBlock> <outputBlocks>
+ 	| none "\n"
+	| @  ;
+<outputBlock> ::= IF #10 <expression> #16 THEN <outputCommand> <outputCommands> <outputElse> ENDIF #12 
+	| #17 <outputCommand> <outputCommands> #12 ;
+<outputElse> ::= ELSE #13 <outputCommand> <outputCommands> 
+	| @ ;
+<outputCommands> ::= <outputCommand> <outputCommands>
+	| @ #20 ;
+<outputCommand> ::= <outCommand> #26 string #18 string #18 #27 "\n" #19 ;
+<outCommand> ::= GET #18 ;
+<expression> ::= <expression2> <and_Or> ;
+<expression2> ::= "!" #11 <expression> 
+	| NOT #11 <expression>
+	| "(" #11 <expression> ")" #11
+	| <expr> ;
+<and_Or> ::= "||" #11 <expression2> <and_Or> 
+	| "&&" #11 <expression2> <and_Or> 
+	| AND #11 <expression2> <and_Or> 
+	| OR #11 <expression2> <and_Or> 
+	| @ ;
+<expr> ::= IN_PATH #11 string #11
+	| IN_CLASSPATH #11 string #11
+	| VERSION #11 string #11 string #11
+	| string #11 <expr2> 
+	| @ ;
+<expr2> ::= "=" #11 <value>
+	| "==" #11 <value> 
+	| "!=" #11 <value> 
+	| "<" #11 <value> 
+	| ">" #11 <value> 
+	| "<=" #11 <value> 
+	| ">=" #11 <value> 
+	| @ ;
+<value> ::= string #11 ;

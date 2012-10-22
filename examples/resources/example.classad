@@ -1,0 +1,17 @@
+[
+copyTo="scp $localfile $machine:$remotefile";
+remExec="ssh -x $machine $command";
+copyFrom="scp $machine:$remotefile $localfile";
+workers={w1,w2};
+w1=[
+OS="linux";
+servername="xmpp.ourgrid.org";
+username="user1";
+];
+w2=[
+OS="linux";
+servername="xmpp.ourgrid.org";
+username="user2";
+];
+]
+

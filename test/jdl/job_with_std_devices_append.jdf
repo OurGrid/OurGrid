@@ -1,0 +1,9 @@
+job :
+label : myjob2
+requirements : 
+
+task:
+init: put Fat.class Fat.class
+	  put input.dat input.dat
+remote: Fat.class < input.dat >> out.dat 2>> err.dat
+final:  get out.dat out.dat

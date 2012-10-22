@@ -1,0 +1,5 @@
+# This file is not semantically correct because of the missing attribute username at the peer definition
+PEER : 
+	LABEL : UFRJ 
+	USSSSSERNAME : peer
+	servername : jabber.org

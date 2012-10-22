@@ -1,0 +1,8 @@
+job : 
+label 	: OneSimpleTask
+
+task :
+init 	: put Fat.class Fat.class
+remote 	: java -cp . Fat 3 261147332 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK
+

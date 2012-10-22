@@ -1,0 +1,8 @@
+[
+workers={w1};
+w1=[
+username="worker1";
+type="ualinux";
+OS="linux";
+];
+]

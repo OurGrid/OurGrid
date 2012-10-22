@@ -1,0 +1,24 @@
+Template: ${package.name}/username
+Type: string
+Default: 
+Description: xmpp.ourgrid.username:
+
+Template: ${package.name}/servername
+Type: string
+Default: 
+Description: xmpp.ourgrid.servername:
+
+Template: ${package.name}/dsusername
+Type: string
+Default: 
+Description: aggregator.ds.username:
+
+Template: ${package.name}/dsservername
+Type: string
+Default: 
+Description: aggregator.ds.servername:
+
+Template: ${package.name}/password
+Type: string
+Default: 
+Description: xmpp.ourgrid.password:

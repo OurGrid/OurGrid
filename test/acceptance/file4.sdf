@@ -1,0 +1,12 @@
+workerdefaults:
+ servername: testserver
+ os: linux
+
+worker:
+ username: testuserB
+ mem: 128
+ 
+worker:
+ username: testuserC
+ mem:     
+ os: windows

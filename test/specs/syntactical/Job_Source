@@ -1,0 +1,46 @@
+job : 
+label		=	Test_Job;
+REQUIRES	=	OS == Linux && PLAYPEN_SIZE >= 200;
+INIT =
+sample/init_script1;
+
+input		= 
+		PUT sample/execute $PLAYPEN;
+		PUT sample/execute2 $PLAYPEN;
+		IF (PLAYPEN_SIZE < 300) THEN { 
+			PUT sample/input1 $PLAYPEN/input;
+			PUT sample/input2 $PLAYPEN/input;
+		} ELSE { 
+			PUT sample/input3 $PLAYPEN/input; 
+			PUT sample/input4 $PLAYPEN/input;
+		}
+		PUT sample/execute3 $PLAYPEN;
+		
+REMOTE		=	$PLAYPEN/execute input;
+OUTPUT		=	GET $PLAYPEN/output sample/output_$TASK;
+FINAL		=	sample/final_script1;
+TASK
+:
+
+TASK :
+INPUT		=	PUT sample/input3 $PLAYPEN/input; PUT sample/execute $PLAYPEN;
+OUTPUT          =
+                IF (PLAYPEN_SIZE < 300) THEN {
+			GET $PLAYPEN/output1 sample/output_$TASK;
+			GET $PLAYPEN/output2 sample/output_$TASK;
+                }
+
+TASK :
+
+TASK		:
+INIT =	sample/init_script2;
+INPUT		=	STORE sample/execute2 $STORAGE; STORE sample/input1 $STORAGE;
+REMOTE		=	$STORAGE/execute2 input1;
+OUTPUT		=	
+		GET $STORAGE/output2 sample/output_$TASK;
+                IF (PLAYPEN_SIZE < 300) THEN {
+		        GET $PLAYPEN/output1 sample/output_$TASK;
+			GET $PLAYPEN/output2 sample/output_$TASK;
+		}
+		GET $STORAGE/output3 sample/output_$TASK;
+FINAL		=	sample/final_script2;

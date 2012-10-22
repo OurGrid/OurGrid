@@ -1,0 +1,17 @@
+<? 
+	String Comezamo;
+	Comezamo = 'Hello';
+	
+	//fun??o
+	function seiContar() {
+		output ('sei contar');
+	}
+	
+	if (Id < 15) {//comentario
+		output ('Sai!');
+	}
+	
+	while (count_x <= 20) {}
+	numero = 20* count_x+ 2;
+	
+	String str_34;str_34 = 'wer_12     ';?>

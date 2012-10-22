@@ -1,0 +1,106 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+
+#Tokens
+JOB
+TASK
+REQUIRES
+INIT
+INPUT
+REMOTE
+OUTPUT
+FINAL
+IF
+THEN
+ELSE
+PUT
+STORE
+GET
+string
+int
+real
+boolean
+"="
+":"
+";"
+"{"
+"}"
+"("
+")"
+"||"
+"&&"
+"!"
+"=="
+"!="
+">"
+"<"
+"<="
+">="
+IN_PATH
+IN_CLASSPATH
+VERSION
+#NonTerminals
+<job>
+<defaultTask>
+<taskList>
+<definitions>
+<requires>
+<init>
+<input>
+<remote>
+<output>
+<final>
+<inputEntries>
+<inputElse>
+<inputCommands>
+<inCommand>
+<outputEntries>
+<outputElse>
+<outputCommands>
+<outCommand>
+<line>
+<expression>
+<expression2>
+<and_Or>
+<expr>
+<expr2>
+<value>
+
+#Grammar
+<job> ::= JOB ":" <defaultTask> <taskList> ;
+<defaultTask> ::= <definitions> ;
+<taskList> ::= TASK ":" <definitions> <taskList> | @ ;
+<definitions> ::= <requires> <init> <input> <remote> <output> <final> ;
+<requires> ::= REQUIRES "=" <expression> ";" | @ ;
+<init> ::= INIT "=" <line> ";" | @ ;
+<input> ::= INPUT "=" <inputEntries> | @  ;
+<inputEntries> ::= IF <expression> THEN "{" <inputCommands> "}" <inputElse> <inputEntries> |
+	<inputCommands> <inputEntries> | @ ;
+<inputElse> ::= ELSE "{" <inputCommands> "}" | @ ;
+<inputCommands> ::= <inCommand> string string ";" ;
+<inCommand> ::= PUT | STORE ;
+<remote> ::= REMOTE "=" <line> ";"  | @ ;
+<output> ::= OUTPUT "=" <outputEntries> | @  ;
+<outputEntries> ::= IF <expression> THEN "{" <outputCommands> "}" <outputElse> <outputEntries> |
+	<outputCommands> <outputEntries> | @ ;
+<outputElse> ::= ELSE "{" <outputCommands> "}" | @ ;
+<outputCommands> ::= <outCommand> string string ";" ;
+<outCommand> ::= GET ;
+<final> ::= FINAL "=" <line> ";"  | @ ;
+<line> ::= string <line> | int <line> | real <line> | boolean <line> | @ ;
+<expression> ::= <expression2> <and_Or> ;
+<expression2> ::= "!" <expression> | "(" <expression> ")" | <expr> ;
+<and_Or> ::= "||" <expression2> | "&&" <expression2> ;
+<expr> ::= IN_PATH string | IN_CLASSPATH string | VERSION string string | string <expr2> | @ ;
+<expr2> ::= "==" <value> | "!=" <value> | "<" <value> | ">" <value> | "<=" <value> | ">=" <value> ;
+<value> ::= string | int | real | boolean ;

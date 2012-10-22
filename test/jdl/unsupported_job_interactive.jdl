@@ -1,0 +1,14 @@
+[
+	Name = "Interactive Job";
+	Type = "Job";
+	JobType = "interactive";
+	ListenerPort = 44000;
+	ListenerHost = "machine.lsd.ufcg.edu.br";
+	ListenerPipeName = "/tmp/my-job-pipe";
+	
+	VirtualOrganisation = "green";
+	Executable = "run.sh";
+	InputSandbox = {"run.sh"};
+	Requirements = other.GlueHostOperatingSystemRelease == "LINUX";
+	Rank = 10;
+]

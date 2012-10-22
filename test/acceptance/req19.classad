@@ -1,0 +1,7 @@
+[
+servername="xmpp.ourgrid.org";
+workers={w1};
+w1=[
+username="workerA.ourgrid.org";
+];
+]

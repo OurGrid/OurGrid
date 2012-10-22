@@ -1,0 +1,5 @@
+workerdefaults:
+ servername: xmpp.ourgrid.org
+
+worker:
+ username: workerA.ourgrid.org

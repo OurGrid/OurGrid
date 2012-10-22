@@ -1,0 +1,12 @@
+job : 
+label 	: SimpleJob4
+
+task :
+init 	: store mytask.sh mytask-$JOB.sh
+          put mytask.sh mytask-$JOB.$TASK.sh
+	  store mytask.sh $PLAYPEN/teste
+	  store mytask.sh $STORAGE/teste2
+remote 	: mytask-$JOB.sh $STORAGE/mytask-$TASK.out
+final   : get $STORAGE/mytask-$TASK.out mytesteSwan/mytask-$TASK.out
+          get $STORAGE/teste2 mytesteSwan/teste2
+	  get teste mytesteSwan/teste

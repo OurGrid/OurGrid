@@ -1,0 +1,66 @@
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		
+		<property name="hibernate.dialect">
+			org.hibernate.dialect.MySQL5InnoDBDialect
+		</property>
+		<property name="hibernate.connection.driver_class">
+			com.mysql.jdbc.Driver
+		</property>
+		<property name="hibernate.connection.url">
+			jdbc:mysql://localhost:3306/your_database?autoReconnect=true
+		</property>
+		<property name="hibernate.connection.username">database_username</property>
+		<property name="hibernate.connection.password">database_password</property>
+		
+		<!-- c3p0 configuration-->
+		<property name="hibernate.connection.provider_class">org.hibernate.connection.C3P0ConnectionProvider</property>
+		<property name="hibernate.c3p0.max_size">50</property>
+		<property name="hibernate.c3p0.min_size">2</property>
+		<property name="hibernate.c3p0.timeout">25000</property>
+		<property name="hibernate.c3p0.max_statements">50</property>
+		<property name="hibernate.c3p0.idle_test_period">3000</property>
+		<property name="hibernate.c3p0.acquire_increment">2</property>
+		
+	    <!-- JDBC connection pool (use the built-in) -->
+        <!-- <property name="connection.pool_size">1</property> -->
+        
+        <!-- Enable Hibernate's automatic session context management -->
+        <property name="current_session_context_class">thread</property>
+
+        <!-- Disable the second-level cache  -->
+        <!-- <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property> -->
+        
+        <!-- Cache configuration  -->
+		<property name="hibernate.cache.use_query_cache">true</property>
+		<property name="hibernate.cache.use_second_level_cache">true</property>
+		<property name="hibernate.cache.region.factory_class">
+         net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory</property>
+
+		<!-- Debug configuration -->
+		<property name="show_sql">false</property>
+		<property name="hibernate.generate_statistics">false</property>
+		<property name="hibernate.use_sql_comments">true</property>
+		 
+		<!-- Create all tables if they have not been created before. -->
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Attribute"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Balance"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_BalanceValue"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Command"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Job"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Login"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Peer"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_GridProcess"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Task"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_User"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.AG_Worker"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.monitor.AG_PeerStatusChange"/>
+		<mapping class="org.ourgrid.common.statistics.beans.aggregator.monitor.AG_WorkerStatusChange"/>
+		
+	</session-factory>
+</hibernate-configuration>

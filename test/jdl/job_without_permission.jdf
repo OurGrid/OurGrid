@@ -1,0 +1,6 @@
+job :
+label : myjob1
+requirements : 
+
+task :
+remote : echo "Testing ..."

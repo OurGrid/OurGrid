@@ -1,0 +1,18 @@
+ZippedISB="archive.tgz"
+PerusalFileEnable = false;
+PerusalTimeInterval = 1000;
+PerusalFilesDestURI = “gsiftp://ghemon.cnaf.infn.it/home/glite/peek”;
+ Not yet supported
+OutputData = {[
+	OutputFile = "dataset.out";
+	LogicalFileName = "lfn:/test/result1";
+], [
+	OutputFile = "dataset_2.out ";
+	StorageElement = "se001.cnaf.infn.it";
+]}
+LBAddress = “tigerman.cnaf.infn.it:9000”;
+MyProxyServer = "proxy.lsd.ufcg.edu.br"; #glite option
+HLRLocation = "lilith.to.infn.it:56568:/O=CESNET/O=Masaryk University/CN=Miroslav Ruda"
+JobProvenance = "https://lindir.ics.muni.cz:10001";
+UserData = []
+ShortDeadlineJob = false;

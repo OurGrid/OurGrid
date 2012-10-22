@@ -1,0 +1,101 @@
+#!/bin/bash
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+function replace {
+    sed -ri "s/$1=(.*)/$1=$2/g" $3
+}
+
+db_get ${package.name}/username
+USERNAME="$RET"
+db_get ${package.name}/servername
+SERVERNAME="$RET"
+db_get ${package.name}/password
+PASSWORD="$RET"
+db_get ${package.name}/brokeraddress
+PEERADDRESS="$RET"
+
+function createAndConfigureProperties() {
+	su $SUDO_USER -c "touch $PROPERTIES_FILE"
+	su $SUDO_USER -c "chmod 777 $PROPERTIES_FILE"
+	echo "#=========================================================" >> $PROPERTIES_FILE
+	echo "#" >> $PROPERTIES_FILE
+	echo "# mg.properties	(Mygrid configuration properties)" >> $PROPERTIES_FILE
+	echo "#" >> $PROPERTIES_FILE
+	echo "#=========================================================" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#indicates which scheduling heuristic must be used by Broker during the task-to-processor assignments" >> $PROPERTIES_FILE
+	echo "#(current only option: workqueue)" >> $PROPERTIES_FILE
+	echo "mg.heuristic workqueue" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The maximum number of replicas of a task" >> $PROPERTIES_FILE
+	echo "mg.maxreplicas 3" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The property key that determines the Storage Directory" >> $PROPERTIES_FILE
+	echo "mg.storagedir .mgstorage" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The maximum number of attempts to execute a task before it is considered failed" >> $PROPERTIES_FILE
+	echo "mg.maxfails 10" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The maximum number of blacklist fails. This determines how many times" >> $PROPERTIES_FILE
+	echo "#a machine can fail within a job before it is blacklisted. If the job" >> $PROPERTIES_FILE
+	echo "# has less tasks than this number then the machine will fail once in" >> $PROPERTIES_FILE 
+	echo "# each task." >> $PROPERTIES_FILE
+	echo "mg.max.blacklist.fails 10" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The default GDF (Grid Definition File) to automatically set the Grid" >> $PROPERTIES_FILE
+	echo "#mg.default.gdf=" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#The property key that determines the Job ID persistance" >> $PROPERTIES_FILE
+	echo "mg.persist.jobid no" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "#=========================================================" >> $PROPERTIES_FILE
+	echo "# commune (Java Internet Communication) Properties" >> $PROPERTIES_FILE
+	echo "#" >> $PROPERTIES_FILE
+	echo "# In this section of the configuration file you'll" >> $PROPERTIES_FILE
+	echo "# your settings for the Jabber server and user" >> $PROPERTIES_FILE
+	echo "#" >> $PROPERTIES_FILE
+	echo "#=========================================================" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "# Your Jabber user name" >> $PROPERTIES_FILE
+	echo "commune.xmpp.username={username}" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "# Your Jabber password" >> $PROPERTIES_FILE
+	echo "commune.xmpp.password={password}" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	echo "# Address usedS by the Jabber Server (mandatory)" >> $PROPERTIES_FILE
+	echo "commune.xmpp.servername={servername}" >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE
+	CERTIFICATE_KEYS=$(su $SUDO_USER -c "java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME $SERVERNAME $CERTIFICATE_FILE")
+	BROKER_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+	BROKER_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+	echo "commune.privatekey="$BROKER_PRIVATEKEY >> $PROPERTIES_FILE
+	echo "commune.publickey="$BROKER_PUBLICKEY >> $PROPERTIES_FILE
+	echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
+	echo "" >> $PROPERTIES_FILE 	
+	echo "broker.peer.address={peeraddress}" >> $PROPERTIES_FILE
+}
+
+chmod -R 777 /etc/ourgrid/broker
+
+PROPERTIES_FILE=$HOME/.broker/broker.properties
+CERTIFICATE_FILE=$HOME/.broker/certification/mycertificate/mycertificate.cer
+
+if [ -e $PROPERTIES_FILE ]; then 
+	su $SUDO_USER -c "sed -ri 's/commune.xmpp.username=(.*)/commune.xmpp.username=$USERNAME/g' $3 $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -ri 's/commune.xmpp.password=(.*)/commune.xmpp.password=$PASSWORD/g' $3 $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -ri 's/commune.xmpp.servername=(.*)/commune.xmpp.servername=$SERVERNAME/g' $3 $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -ri 's/broker.peer.address=(.*)/broker.peer.address=$PEERADDRESS/g' $PROPERTIES_FILE"
+else
+	su $SUDO_USER -c "mkdir -p $HOME/.broker"
+	if [ ! -e $CERTIFICATE_FILE ]; then 
+		su $SUDO_USER -c "mkdir -p $HOME/.broker/certification/mycertificate"
+	fi
+	createAndConfigureProperties
+	su $SUDO_USER -c "sed -i 's/{username}/'$USERNAME'/g' $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE"
+	su $SUDO_USER -c "sed -i 's/{peeraddress}/'$PEERADDRESS'/g' $PROPERTIES_FILE"
+fi
+
+db_purge

@@ -1,0 +1,63 @@
+job : 
+label 	: BDGMJob
+requirements : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 
+
+task :
+init 	: put simulator.tar simulator.tar
+remote 	: tar zxvf simulator.tar; mkdir result; sh run_sim.sh simulation.properties result
+final   : 

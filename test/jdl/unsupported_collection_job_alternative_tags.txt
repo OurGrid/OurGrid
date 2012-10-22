@@ -1,0 +1,7 @@
+MyProxyServer = "skurut.cesnet.cz";
+HLRLocation = "eth.to.infn.it:5562:/O=CESNET/O=INFN To/CN=Andrea Guarise";
+LBAddress = “tigerman.cnaf.infn.it:9000”;
+JobProvenance = "https://lindir.ics.muni.cz:10001";
+ZippedISB="archive.tgz"
+PerusalFileEnable = false;
+OutputSandboxDestBaseURI = {"/home/ricardo/sim/run1};

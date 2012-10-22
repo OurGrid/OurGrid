@@ -1,0 +1,34 @@
+workerdefaults:
+    servername: xmpp.ourgrid.org
+
+worker:
+    username: workerA
+    mem: 16
+
+worker:
+    username: workerB
+    mem: 32
+
+worker:
+    username: workerC
+    mem: 64
+
+worker:
+    username: workerD
+    mem: 128
+
+worker:
+    username: workerE
+    mem: 256
+
+worker:
+    username: workerF
+    mem: 512
+
+worker:
+    username: workerG
+    mem: 1024
+
+worker:
+    username: workerH
+    mem: 2048

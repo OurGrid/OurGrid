@@ -1,0 +1,63 @@
+[
+	Name = "DAG Job";
+	Type = "dag";
+	VirtualOrganisation = "EGEE";
+	MyProxyServer = "skurut.cesnet.cz";
+	HLRLocation = "eth.to.infn.it:5562:/O=CESNET/O=INFN To/CN=Andrea Guarise";
+	InputSandbox = {
+		"/tmp/foo",
+		"/home/gliteuser/bar",
+		"/tmp/myconf"
+	};
+	Rank = other.GlueHostEstimatedTraversalTime;
+	Requirements = other.GlueCEStateStatus == "Production";
+	max_nodes_running = 5;
+	NodesCollocation = true;
+	
+	nodes = [
+		nodeA = [
+			description = [
+				JobType = "Normal";
+				Executable = "a.exe";
+				InputSandbox = {"/home/data/myfile.txt", root.InputSandbox};
+			];
+		];
+		mynode = [
+			description = [
+				JobType = "Normal";
+				Executable = "b.exe";
+				Arguments = "1 2 3";
+				RetryCount = 3;
+				Requirements = other.GlueCEInfoTotalCPUs > 2;
+				Rank = other.GlueCEStateFreeCPUs;
+				OutputSandbox = {"myoutput.txt", "myerror.txt" };
+			];
+		];
+		nodeD = [
+			description = [
+				JobType = "Checkpointable";
+				Executable = "b.exe";
+				Arguments = "1 2 3";
+				RetryCount = 3;
+				InputSandbox = {
+					"/home/pippo",
+					"/home/test/b.exe"
+				};
+			];
+		];
+		nodeC = [
+			file = "/home/test/c.jdl";
+		];
+		nodeB = [
+			file = "foo.jdl";
+			node_retry_count = 2;
+		];
+	];
+
+	dependencies = {
+		{ nodeA, nodeB }, 
+		{ nodeA, nodeC },
+		{ nodeA, mynode }, 
+		{ { nodeB, nodeC, mynode }, nodeD }
+	};
+];

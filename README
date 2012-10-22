@@ -1,0 +1,8 @@
+OurGrid source package
+
+./deployer - Ready-to-install resources
+./examples - Sample files
+./src/main/java - Source code
+./src/test/java - Test source code
+./resources - Resources used in runtime
+./pom.xml - Configuration file used by Maven to build the project

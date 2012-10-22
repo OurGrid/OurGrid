@@ -1,0 +1,17 @@
+[
+servername="testserver";
+OS="linux";
+
+workers={w1, w2};
+
+w1=[
+	username="testuserB";
+ 	mainMemory=128;
+];
+
+w2=[
+	username="testuserC";
+	cpuLoad="abc";     
+	OS="windows";
+];
+]

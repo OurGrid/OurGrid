@@ -1,0 +1,47 @@
+#!/bin/bash -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+recommended=$(grep -c processor /proc/cpuinfo)
+
+db_get ${package.name}/num_workers
+if  echo "$RET" | egrep -q '^[0-9]+$'; then
+	if [ "$RET" -ge 1 ]; then
+		echo
+	else
+		db_get ${package.name}/invalid_num_workers
+	fi
+else 
+	db_get ${package.name}/invalid_num_workers
+fi
+
+NUM_WORKERS="$RET"
+db_get ${package.name}/username
+USERNAME="$RET"
+db_get ${package.name}/servername
+SERVERNAME="$RET"
+db_get ${package.name}/password
+PASSWORD="$RET"
+db_get ${package.name}/peeraddress
+PEERADDRESS="$RET"
+db_get ${package.name}/idlenessdetector
+IDLENESS_DETECTOR="$RET"
+db_get ${package.name}/idlenesstime
+IDLENESS_TIME="$RET"
+
+/bin/bash copyworkers "$NUM_WORKERS" "$USERNAME" "$SERVERNAME" "$PASSWORD" "$PEERADDRESS" "$IDLENESS_DETECTOR" "$IDLENESS_TIME"
+
+if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then 
+	echo "xhost +si:localuser:ourgrid" >> /etc/profile
+fi	
+
+chmod +x /etc/init.d/worker
+update-rc.d worker defaults
+
+chown ourgrid /usr/bin/worker
+chown ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+rm -f /usr/bin/copyworkers
+
+db_purge

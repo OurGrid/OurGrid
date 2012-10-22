@@ -1,0 +1,3 @@
+# Defaults for Ourgrid Aggregator - sourced by /etc/init.d/aggregator
+# Start aggregator on boot?
+START=yes

@@ -1,0 +1,29 @@
+#!/bin/bash
+ 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ #
+ # Package:		Broker 4.0
+ #
+ # Description:	 This shell script converts JDF to JDL files.
+ #
+ # Copyright (c) 2009 Universidade Federal de Campina Grande 
+ # 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+usage(){
+	echo
+	echo "Usage: jdf2jdl oldfile.jdf [newfile.jdl]"
+	echo
+}
+
+cd lib
+for i in `ls *.jar`; do
+	myclass="lib/$i"
+	mypath=$mypath:$myclass
+done 
+cd ..
+if [ $# -eq 1 ] || [ $# -eq 2 ]; then
+	java -classpath $mypath org.ourgrid.common.spec.main.JDF2JDL $*
+else
+	usage
+fi

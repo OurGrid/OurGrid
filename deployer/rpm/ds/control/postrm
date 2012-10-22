@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -rf /var/log/ourgrid/ds*.log*
+exit 0

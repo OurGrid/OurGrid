@@ -1,0 +1,11 @@
+workerdefaults:
+
+OS : linux
+remExec : ssh -x $machine $command
+copyFrom : scp $machine:$remotefile $localfile
+copyTo : scp $localfile $machine:$remotefile
+
+worker :
+username : flavio
+password : flavio
+servername : barbado.lsd.ufcg.edu.br

@@ -1,0 +1,12 @@
+JOB		: 
+
+REQUIREMENTS	:	OS == Linux
+
+TASK		:
+REMOTE		:	$STORAGE/execute2 input1
+
+TASK :
+
+TASK            :
+REMOTE          :       $STORAGE/execute3 input1
+

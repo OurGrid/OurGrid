@@ -1,0 +1,24 @@
+[
+servername="testserver";
+OS="linux";
+software=[
+	name="Java";
+	data={d};
+	d=[
+		elements={a};
+		a=[
+			name="Test ...";
+		];
+	];
+	version="1.6";
+];
+
+names={"name1", "names2"};
+
+workers={w1};
+
+w1=[
+	username="testuserB";
+ 	mainMemory=128;
+];
+]

@@ -1,0 +1,14 @@
+job : 
+label 	: SimpleJob
+
+task :
+remote 	: sleep 10
+
+task :
+remote 	: sleep 14
+
+task :
+remote 	: sleep 18
+
+task :
+remote 	: sleep 20

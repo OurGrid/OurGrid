@@ -1,0 +1,37 @@
+#!/bin/bash
+# Source debconf library.
+
+USERNAME=$(hostname)
+SERVERNAME="xmpp.ourgrid.org"
+DSUSERNAME="lsd-ds"
+DSSERVERNAME="xmpp.ourgrid.org"
+PASSWORD="xmpp-password"
+
+PROPERTIES_FILE=/etc/ourgrid/aggregator/aggregator.properties
+
+sed -i 's/{username}/'$USERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+sed -i 's/{ds-username}/'$DSUSERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{ds-servername}/'$DSSERVERNAME'/g' $PROPERTIES_FILE
+
+CERTIFICATE_FILE=/etc/ourgrid/aggregator/certification/mycertificate/mycertificate.cer
+mkdir -p /etc/ourgrid/aggregator/certification/mycertificate/
+CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME $SERVERNAME $CERTIFICATE_FILE)
+AGGREGATOR_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+AGGREGATOR_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+echo "" >> $PROPERTIES_FILE
+echo "commune.privatekey="$AGGREGATOR_PRIVATEKEY >> $PROPERTIES_FILE
+echo "commune.publickey="$AGGREGATOR_PUBLICKEY >> $PROPERTIES_FILE
+echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
+
+chmod +x /etc/init.d/aggregator-start
+chmod +x /etc/init.d/aggregator-stop
+
+su - -c "chkconfig --level 2345 aggregator-start on"
+su - -c "chkconfig --level 016 aggregator-stop on"
+
+chown ourgrid /usr/bin/aggregator
+chown ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+

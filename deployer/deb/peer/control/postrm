@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ "$1" = purge ]; then
+	update-rc.d peer remove
+	rm -rf /var/log/ourgrid/peer*.log*
+	rm -rf /etc/ourgrid/peer
+	rm -rf /etc/ourgrid/db/peer
+fi
+
+exit 0

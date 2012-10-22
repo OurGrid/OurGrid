@@ -1,0 +1,14 @@
+<trusts>
+    <trust>
+        <priority>1</priority>         
+         <peer>
+           <name>peerE</name>
+       </peer>
+    </trust>
+    <trust>
+        <name>lesssecure</name>
+        <peer>
+           <publickey>keyxptopeerA</publickey>
+        </peer>
+    </trust>
+</trusts>

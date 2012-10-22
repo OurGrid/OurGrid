@@ -1,0 +1,18 @@
+<trusts>
+ <trust>
+      <name>A</name>
+      <priority>1</priority> 
+      <peer>
+         <name>peerA</name>
+         <publickey>keyxptopeerA</publickey>
+      </peer>     
+ </trust>
+ <trust>
+      <name>B</name>
+      <priority>1</priority> 
+      <peer>
+         <name>peerB</name>
+         <publickey>keyxptopeerB</publickey>
+      </peer>        
+ </trust>
+</trusts>

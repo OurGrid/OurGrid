@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ "$1" = upgrade ]; then
+	aggregator stop
+fi
+exit 0

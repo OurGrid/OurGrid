@@ -1,0 +1,14 @@
+job : 
+label 	: SimpleJob
+
+task :
+remote 	: dir
+
+task :
+remote 	: dir
+
+task :
+remote 	: dir
+
+task :
+remote 	: dir

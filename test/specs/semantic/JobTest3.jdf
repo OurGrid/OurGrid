@@ -1,0 +1,40 @@
+job :
+
+label : job3_test
+requirements : (os==linux && ram>=400) OR (os!=solaris && ram<=300)
+
+remote : run_app.sh
+final :
+	if ( os == linux ) then
+		get $PLAYPEN/output_l output/outputL.$TASK
+	else
+        	get $PLAYPEN/output_l /temp/mygrid/output/outputS.$TASK
+	endif
+
+task :
+init : put entry/input1.txt $PLAYPEN
+	store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input2.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input3.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input4.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input5.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input6.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh
+
+task :
+init : put entry/input7.txt $PLAYPEN
+        store /temp/mygrid/app/run.sh $PLAYPEN/run_app.sh

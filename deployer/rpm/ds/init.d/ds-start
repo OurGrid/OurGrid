@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# chkconfig: 2345 95 20
+# description: Starts ourgrid-ds
+# processname: ds-start
+
+### BEGIN INIT INFO
+# Provides:          ds
+# Required-Start:    $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Short-Description: Starts the ds module of OurGrid(ourgrid.org)
+### END INIT INFO
+
+#sudo -u ourgrid /usr/bin/ds start
+su ourgrid -c "ds start" &> /dev/null

@@ -1,0 +1,29 @@
+[
+	Name = "Partitionable Job";
+	Type = "Job";
+	JobType = "partitionable";
+	Executable = "hsum" ;
+	JobSteps = {"cms0", "cms1", "cms2", "cms3", "orca"};
+	StepWeight = {7.5, 25, 37.5, 15, 15};
+	CurrentStep = 0;
+	Stdoutput = "std.out" ;
+	StdError = "std.err" ;
+	InputSandbox = "/home/cms/prod/hsum";
+	OutputSandbox ={"std.out" ,"std.err"} ;
+	prejob=[
+		Executable = "prod_prepa";
+		InputSandbox = "/home/cms/prod_prepa";
+		rank = other.GlueCEStateFreeCPUs;
+		requirements = other.GlueCEInfoTotalCPUs > 2 ;
+	];
+	postjob=[
+		JobType = "checkpointable";
+		Executable = "aggregator" ;
+		Arguments = "5";
+		InputSandbox = "/home/cms/prod/aggregator";
+		rank = -other.GlueCEStateEstimatedResponseTime ;
+		requirements = other.GlueCEStateStatus == "Production" ;
+	];
+	requirements = Member("GATE-1.0-3", other.GlueHostApplicationSoftwareRunTimeEnvironment);
+	rank = -other.GlueCEStateEstimatedResponseTime ;
+]

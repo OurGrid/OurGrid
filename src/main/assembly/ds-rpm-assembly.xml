@@ -1,0 +1,55 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>ds-deb</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  
+  <files>
+    <file>
+    	<source>deployer/deb/ds/ds</source>
+    	<outputDirectory>/usr/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/ds/log4j.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/ds</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/ds/ds-hibernate.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/ds</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/ds/ds.properties</source>
+    	<outputDirectory>/etc/ourgrid/ds</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/ds/default/ds</source>
+    	<outputDirectory>/etc/default</outputDirectory>
+    </file>
+<!--     <file> -->
+<!--     	<source>deployer/deb/ds/init.d/ds</source> -->
+<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
+<!--     </file> -->
+    <file>
+    	<source>deployer/rpm/ds/init.d/ds-start</source>
+    	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/rpm/ds/init.d/ds-stop</source>
+    	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+  </files>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>/usr/share/ourgrid</outputDirectory>
+  		<directory>deployer/deb/ds/share</directory>
+  		<excludes>
+  			<exclude>*</exclude>
+  		</excludes>
+  	</fileSet>
+  </fileSets>
+</assembly>

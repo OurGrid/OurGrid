@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+if [ "$1" = "purge" ]; then
+	update-rc.d worker-vbox remove
+	rm -rf /etc/ourgrid/worker-vbox*
+	rm -rf /etc/ourgrid/vbox_images
+	rm -rf /var/log/ourgrid/worker-vbox*.log*
+fi
+
+exit 0

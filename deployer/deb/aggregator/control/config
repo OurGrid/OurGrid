@@ -1,0 +1,23 @@
+#!/bin/sh -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+db_set ${package.name}/username $(hostname)
+db_input critical ${package.name}/username || true
+db_go
+
+db_set ${package.name}/servername xmpp.ourgrid.org
+db_input critical ${package.name}/servername || true
+db_go
+
+db_set ${package.name}/password xmpp-password
+db_input critical ${package.name}/password || true
+db_go
+
+db_set ${package.name}/dsusername lsd-ds 
+db_input critical ${package.name}/dsusername || true
+db_go
+
+db_set ${package.name}/dsservername xmpp.ourgrid.org
+db_input critical ${package.name}/dsservername || true
+db_go

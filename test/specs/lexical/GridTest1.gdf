@@ -1,0 +1,24 @@
+# This is a comment line!
+
+PEER :
+	name			=	moreia.lsd.ufcg.edu.br;
+	gump_port		=	8888;
+	site			=	lsd.ufcg.edu.br;
+	storage_size	=	150;
+	storage			=	/home/grid/;
+
+# This is other comment line!!!
+WORKER	:
+	name	=	cascudo.lsd.ufcg.edu.br;
+	uaport	=	7777;
+	type	=	User_Agent;
+	os		=	Linux;
+	gateway	=	bla:1,ble:2,bli:3,blo:4,blu:5;
+	
+WORKER :
+	name		= 	robalo.lsd.ufcg.edu.br;
+	type		=	Grid_Script;
+	REM_EXEC	=	ssh -x %machine %command;
+	COPY_TO		=	scp %localdir/%file %machine:%remotedir/;
+	COPY_FROM	=	scp %machine:%remotedir/%file %localdir/;
+	os 			=	Linux;

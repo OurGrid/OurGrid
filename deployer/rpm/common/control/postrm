@@ -1,0 +1,10 @@
+#!/bin/bash
+ls /usr/share/ourgrid > /dev/null 2> /dev/null
+if [ $? -ne 0 ]; then
+	rm -rf /usr/share/ourgrid
+fi
+	
+echo "Removing user \"ourgrid\""
+userdel -r ourgrid || true
+
+exit 0

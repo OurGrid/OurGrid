@@ -1,0 +1,38 @@
+#!/bin/bash
+# Source debconf library.
+
+USERNAME=$(hostname)
+SERVERNAME="xmpp.ourgrid.org"
+PASSWORD="xmpp-password"
+
+PROPERTIES_FILE=/etc/ourgrid/peer/peer.properties
+
+sed -i 's/{username}/'$USERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+
+#give user "ourgrid" X permissions
+if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then 
+	echo "xhost +si:localuser:ourgrid" >> /etc/profile
+fi
+
+CERTIFICATE_FILE=/etc/ourgrid/peer/certification/mycertificate/mycertificate.cer
+mkdir -p /etc/ourgrid/peer/certification/mycertificate/
+CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME $SERVERNAME $CERTIFICATE_FILE)
+PEER_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+PEER_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+echo "" >> $PROPERTIES_FILE
+echo "commune.privatekey="$PEER_PRIVATEKEY >> $PROPERTIES_FILE
+echo "commune.publickey="$PEER_PUBLICKEY >> $PROPERTIES_FILE
+echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE	
+
+
+chown ourgrid /usr/bin/peer
+chown ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+chmod +x /etc/init.d/peer-start
+chmod +x /etc/init.d/peer-stop
+
+su - -c "chkconfig --level 2345 peer-start on"
+su - -c "chkconfig --level 016 peer-stop on"

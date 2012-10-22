@@ -1,0 +1,57 @@
+#!/bin/sh -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+recommended=$(grep -c processor /proc/cpuinfo)
+
+db_subst ${package.name}/num_workers cpus $recommended
+
+# How many workers do you want to install?
+db_input critical ${package.name}/num_workers || true
+db_go
+
+# Check their answer.
+db_get ${package.name}/num_workers
+
+while : ;
+do
+	if  echo "$RET" | egrep -q '^[0-9]+$' && [ "$RET" -ge 1 ]; then
+		break
+	else
+		db_subst ${package.name}/invalid_num_workers cpus $recommended
+
+   		db_input critical ${package.name}/invalid_num_workers || true
+   		db_go || true
+	
+	   	db_get ${package.name}/invalid_num_workers
+	 fi
+done
+
+db_set ${package.name}/username $(hostname)
+db_input critical ${package.name}/username || true
+db_go
+
+db_set ${package.name}/servername xmpp.ourgrid.org
+db_input critical ${package.name}/servername || true
+db_go
+
+db_set ${package.name}/password xmpp-password
+db_input critical ${package.name}/password || true
+db_go
+
+db_input critical ${package.name}/peeraddress || true
+db_go
+
+db_input critical ${package.name}/virtualization || true
+db_go
+
+db_input critical ${package.name}/idlenessdetector || true
+db_go
+
+db_get ${package.name}/idlenessdetector
+
+if echo $RET | egrep -q Yes 
+then
+	db_input critical ${package.name}/idlenesstime || true
+	db_go
+fi

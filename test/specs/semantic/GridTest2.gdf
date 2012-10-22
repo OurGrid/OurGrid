@@ -1,0 +1,12 @@
+PEER : 
+	LABEL : UFRJ 
+	username : peeruser
+	servername : jabber.xpto.edu.br
+PEER : 
+	LABEL : LCC
+	username : peer-lcc
+	servername : jabber.lcc.ufcg.edu.br
+PEER : 
+	username : peeruser
+	servername : jabber.org
+	bla : ble

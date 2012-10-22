@@ -1,0 +1,5 @@
+# This file is not semantically correct because of the servername attribute is missing
+PEER : 
+	LABEL : UFRJ 
+	username : peer 
+	server_wrong : xxx

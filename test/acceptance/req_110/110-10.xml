@@ -1,0 +1,6 @@
+<trusts>
+ <trust>
+      <name>A</name>
+      <priority>w</priority>      
+ </trust>
+</trusts>

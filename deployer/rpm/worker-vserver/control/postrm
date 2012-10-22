@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+rm -rf /etc/ourgrid/worker-vserver*
+rm -rf /etc/ourgrid/vserver_images
+rm -rf /var/log/ourgrid/worker-vserver*.log*
+
+exit 0

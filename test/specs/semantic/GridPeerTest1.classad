@@ -1,0 +1,17 @@
+[
+type="ualinux";
+mainMemory=300;
+OS="solaris";
+workers={w1,w2};
+	
+w1=[
+username="worker1";
+servername="jabber.lsd";
+OS="linux";
+];
+w2=[
+username="worker2";
+servername="jabber.lsd";
+mainMemory=200;
+];
+]

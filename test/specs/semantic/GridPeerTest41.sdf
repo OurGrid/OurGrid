@@ -1,0 +1,6 @@
+# Fails because the servername is not defined
+WORKERDEFAULTS :
+	WORKER :
+		username : worker1
+		type : ualinux
+		OS : linux

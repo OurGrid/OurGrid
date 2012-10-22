@@ -1,0 +1,17 @@
+[
+servername="testserver";
+OS="linux";
+
+workers={worker1, worker2};
+
+worker1=[
+	username="testuserB";
+	mainMemory=128;
+]
+
+worker2=[
+	username="testuserC";
+ 	mainMemory=256;
+ 	OS="windows";
+
+]

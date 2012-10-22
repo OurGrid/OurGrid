@@ -1,0 +1,45 @@
+<domain type='lxc'>
+  <name>lxc</name>
+  <uuid>4dab22b31d52d8f32516782e98ab3fa0</uuid>
+
+  <os>
+    <type>hvm</type>
+    <boot dev='cdrom'/>
+  </os>
+
+  <memory>1048576</memory>
+  <vcpu>1</vcpu>
+
+  <features>
+    <pae/>
+    <acpi/>
+    <apic/>
+  </features>
+
+  <devices>
+
+    <disk type="file" device="cdrom">
+      <source file="/home/tarciso/Downloads/ubuntu-10.04.2-desktop-i386.iso"/>
+      <target dev="hdc"/>
+      <readonly/>
+    </disk>
+
+    <filesystem type='mount' accessmode='squash'>
+      <source name='lxc-tarciso'/>
+      <source dir='/home/tarciso/Libvirt'/>
+      <target name='lxc-virtual-tarciso'/>
+      <target dir='/Libvirt'/>
+      <readonly/>
+    </filesystem>
+
+    <sound model='sb16'/>
+
+  </devices>
+
+  <filter name='no-ip-spoofing' chain='ipv4'>
+    <rule action='drop' direction='out'>
+      <ip match='no' srcipaddr='$IP' />
+    </rule>
+  </filter>
+
+</domain>

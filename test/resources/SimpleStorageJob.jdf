@@ -1,0 +1,7 @@
+job : 
+label 	: SimpleStorage
+
+task :
+init 	: store mytask.sh $STORAGE/mytask-$JOB.sh
+remote 	: sh mytask-$JOB.sh mytask-$TASK.out
+final   : get mytask-$TASK.out mytask-$TASK.out

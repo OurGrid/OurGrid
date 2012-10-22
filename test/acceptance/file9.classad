@@ -1,0 +1,26 @@
+[
+servername="testserver";
+OS="linux";
+software={java, sql};
+java=[
+	name="Java";
+	version="1.6";
+];
+sql=[
+	name="SQL";
+	version="2.0";
+];
+
+workers={w1, w2};
+
+w1=[
+	username="testuserB";
+ 	mainMemory=128;
+];
+
+w2=[
+	username="testuserC";
+	preemptionEnabled="true";     
+	OS="windows";
+];
+]

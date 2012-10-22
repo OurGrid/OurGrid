@@ -1,0 +1,227 @@
+#!/bin/bash
+ 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ #
+ # Package:		OurGrid 4.0
+ #
+ # Description:	 Worker Administration Tool
+ #
+ # Copyright (c) 2002-2006 Universidade Federal de Campina Grande 
+ # 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+# Find OGROOT:                                          
+# $0 is the executable $OGROOT/bin/broker or a link to it   
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+findogroot(){
+
+	PRG="$0"
+
+	while [ -h "$PRG" ]; do
+		ls=`ls -ld "$PRG"`
+		link=`expr "$ls" : '.*-> \(.*\)$'`
+		if expr "$link" : '.*/.*' > /dev/null; then
+			PRG="$link"
+		else
+			PRG=`dirname "$PRG"`/"$link"
+		fi
+	done
+
+	PRGDIR=`dirname "$PRG"`
+    
+	OGROOT=`cd "$PRGDIR/.." ; pwd`
+	if [ -z "$OGROOT" ]; then
+		echo "ERR_OGROOT_NOT_DEFINED"
+		return $ERR_OGROOT_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+# Set the $VAR $BIN and $LIB
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setenvvars(){
+
+	BIN=$OGROOT/bin
+	LIB=$OGROOT/lib
+
+
+
+
+	if [ -z "$BIN" ] || [ -z "$LIB" ] ; then
+		echo "ERR_VARS_NOT_DEFINED"
+		return $ERR_VARS_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+# Set the OGROOT and CLASSPATH including all libraries from $OGROOT/lib 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+setclasspath(){
+    PWD_=`pwd`
+    mypath=.
+    cd "$LIB"
+    for i in `/bin/ls *.jar`; do
+        myclass="$LIB/$i"
+        mypath=$mypath:$myclass
+    done
+    cd "$PWD_"
+    CLASSPATH=$mypath
+	if [ -z "$CLASSPATH" ]; then
+       return $ERR_CLASSPATH_NOT_DEFINED
+    else
+       return $OK
+    fi
+}
+																		    
+# Set the JAVAOPTION to invoke OurGrid classes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setjavaoptions(){
+
+    JAVAOPTIONS=" -classpath $CLASSPATH -DOGROOT=$OGROOT "
+}
+
+usage(){
+
+	progname=`basename $0`
+	echo "Usage: $progname command sdf"
+	echo "where command is:"
+	echo
+	echo "  start          -- Tries to start all workers from the specified SDF"
+	echo "  stop           -- Tries to stop all workers from the specified SDF"
+	echo "  status         -- Tests all workers from the specified SDF"
+	echo "  restart        -- Tries to restart all workers from the specified SDF"
+	echo "  clean          -- Tries to clean the environment, deleting the workersconf directory"
+	echo 
+    echo "sdf ---> site description file"
+    echo
+	echo "For OurGrid updates and additional information, see the "
+	echo "OurGrid Project home page at http://www.ourgrid.org/ "
+
+	exit $ERR_STD_MISUSE 
+}
+
+
+
+# Tries to start all workers from the specified SDF
+start() {
+	$APP_JAVA/java -DOGROOT="$OGROOT" -cp "$CLASSPATH" $deployerclassname start "$1"
+	sleep 2
+}
+
+# Tries to stop all workers from the specified SDF
+stop() {
+	$APP_JAVA/java -DOGROOT="$OGROOT" -cp "$CLASSPATH" $deployerclassname stop "$1"
+	sleep 2
+}
+
+restart() {
+	$APP_JAVA/java -DOGROOT="$OGROOT" -cp "$CLASSPATH" $deployerclassname restart "$1"
+	sleep 2
+
+}
+
+# Tests all workers from the specified SDF
+status() {
+	$APP_JAVA/java -DOGROOT="$OGROOT" -cp "$CLASSPATH" $deployerclassname status "$1"
+	sleep 2
+}
+
+# Tries to clean the environment deleting the temporary files
+clean() {
+	$APP_JAVA/java -DOGROOT="$OGROOT" -cp "$CLASSPATH" $deployerclassname clean "$1"
+	sleep 2
+}
+printerrdescr()
+{
+	errcode=$1
+	echo "${ErrDescr[$errcode]}"
+}
+
+# # # # # # 
+# Main    #
+# # # # # # 
+
+# Setting macros
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OK=0
+NOK=1
+
+# Setting error codes (from 2 to 254)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ERR_STD_MISUSE=2
+
+ERR_BASE=64
+ERR_OGROOT_NOT_DEFINED=$[ERR_BASE + 0]
+ERR_VARS_NOT_DEFINED=$[ERR_BASE + 1]
+ERR_JAVA_NOT_FOUND=$[ERR_BASE + 2]
+
+ErrDescr=([$ERR_OGROOT_NOT_DEFINED]="Variable OGROOT not defined" [$ERR_VARS_NOT_DEFINED]="BIN and LIB vars not defined" [$ERR_JAVA_NOT_FOUND]="Could not find a valid Java VM")         
+
+
+deployerclassname="org.ourgrid.deployer.Main"
+
+#----------- MAIN -------------#
+
+	nargs=$#
+
+	if [ $nargs -ne 2 ]; then
+		usage
+	fi
+	
+	COMMAND_NAME=$1
+    SDF=$2
+	if [ "$COMMAND_NAME" = "init" ] || [ "$COMMAND_NAME" = "start" ] || [ "$COMMAND_NAME" = "stop" ] || [ "$COMMAND_NAME" = "shutdown" ] || [ "$COMMAND_NAME" = "test" ] || [ "$COMMAND_NAME" = "status" ] || [ "$COMMAND_NAME" = "restart" ] || [ "$COMMAND_NAME" = "clean" ]
+    then
+		findogroot && setenvvars && setclasspath
+		ret=$?
+	else
+		usage
+	fi
+	
+	if [ $ret -ne $OK ]; then
+		errcode=$?
+		printerrdescr $ret       
+		exit $errcode
+	fi
+	
+	sh $OGROOT/bin/testjvm
+	ret=$?
+	if [ $ret -ne $OK ]; then
+		printerrdescr $ERR_JAVA_NOT_FOUND
+		exit $errcode
+	fi
+	
+	APP_JAVA=`cat javalocation`
+
+	case "$COMMAND_NAME" in
+		start|init)
+            shift
+			start $SDF
+			;;
+		stop|shutdown)
+            shift
+			stop $SDF
+			;;
+		status|test)
+            shift
+			status $SDF
+			;;
+        restart)
+			shift
+			restart $SDF
+			;;
+		clean)
+			shift
+			clean $SDF
+			;;
+		*) usage
+	esac
+
+	exit $ret
+

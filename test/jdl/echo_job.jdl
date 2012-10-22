@@ -1,0 +1,7 @@
+[
+	Name = "Echo Job";
+	Type = "Job";
+	JobType = "normal";
+	Executable = "echo";
+	Arguments = "Hello World";
+]

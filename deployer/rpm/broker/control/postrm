@@ -1,0 +1,7 @@
+#!/bin/sh
+
+rm -rf $HOME/.broker/broker*.log*
+rm -rf $HOME/.broker/logs
+
+
+exit 0

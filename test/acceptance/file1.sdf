@@ -1,0 +1,6 @@
+workerdefaults:
+ servername: testserver
+ username: testuser
+ os: linux
+
+worker:

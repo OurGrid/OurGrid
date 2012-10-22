@@ -1,0 +1,10 @@
+<trusts>
+    <trust>
+    	<name>subfoo</name>
+      	<priority>1</priority>
+        <peer> 
+        	<name>peerfoo</name>
+            <publickey>publicKeyfoo</publickey>
+        </peer>
+    </trust>    
+</trusts>

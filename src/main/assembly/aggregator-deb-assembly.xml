@@ -1,0 +1,47 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>aggregator-deb</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  
+  <files>
+    <file>
+    	<source>deployer/deb/aggregator/aggregator</source>
+    	<outputDirectory>/usr/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/aggregator/log4j.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/aggregator</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/aggregator/aggregator-hibernate.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/aggregator</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/aggregator/aggregator.properties</source>
+    	<outputDirectory>/etc/ourgrid/aggregator</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/aggregator/default/aggregator</source>
+    	<outputDirectory>/etc/default</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/aggregator/init.d/aggregator</source>
+     	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+  </files>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>/usr/share/ourgrid</outputDirectory>
+  		<directory>deployer/deb/aggregator/share</directory>
+  		<excludes>
+  			<exclude>*</exclude>
+  		</excludes>
+  	</fileSet>
+  </fileSets>
+</assembly>

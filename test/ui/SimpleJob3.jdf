@@ -1,0 +1,9 @@
+job : 
+label 	: SimpleJob3
+
+task :
+init 	: put /etc/passwd SimpleJob3/passwd
+		  put /etc/host.conf SimpleJob3.1/passwd
+remote 	: echo Nothing to do
+final   : get SimpleJob3/passwd SimpleJob3/passwd
+		  get SimpleJob3.1/passwd SimpleJob3.1/passwd

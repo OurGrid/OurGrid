@@ -1,0 +1,8 @@
+job:
+label: PipelinedJob - job with linux pipelined commands
+
+task:
+
+init:
+remote: echo "test" | echo $?-OK
+final:

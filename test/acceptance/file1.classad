@@ -1,0 +1,10 @@
+[
+servername="testserver";
+username="testuser";
+OS="linux";
+
+workers={w1};
+
+
+
+]

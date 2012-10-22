@@ -1,0 +1,115 @@
+#!/bin/bash
+
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ #
+ # Package:		
+ #
+ # Description:	 This shell script takes care of starting and stopping Broker.
+ #
+ # Copyright (c) 2002-2006 Universidade Federal de Campina Grande 
+ # 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# OurGrid Version
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OGVERSION="4.1"
+
+# Setting macros
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OK=0
+NOK=1
+
+# Setting error codes (from 2 to 254)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ERR_BASE=64
+ERR_STD_MISUSE=$[ERR_BASE + 0]
+ERR_MGROOT_NOT_DEFINED=$[ERR_BASE + 1]
+ERR_VARS_NOT_DEFINED=$[ERR_BASE + 2]
+ERR_JAVAOPTIONS_NOT_DEFINED=$[ERR_BASE + 3]
+ERR_CLASSPATH_NOT_DEFINED=$[ERR_BASE + 6]
+ERR_JAVA_NOT_FOUND=$[ERR_BASE + 7]
+
+ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_MGROOT_NOT_DEFINED]="Variable MGROOT not defined" [$ERR_VARS_NOT_DEFINED]="BIN and LIB vars not defined" [$ERR_JAVAOPTIONS_NOT_DEFINED]="Java options not defined" [$ERR_CLASSPATH_NOT_DEFINED]="CLASSPATH variable not defined" [$ERR_JAVA_NOT_FOUND]="Java not found in your path")
+
+# Find MGROOT:                                          
+# $0 is the executable $MGROOT/bin/broker or a link to it   
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+findogroot(){
+
+	PRG="$0"
+
+	while [ -h "$PRG" ]; do
+		ls=`ls -ld "$PRG"`
+		link=`expr "$ls" : '.*-> \(.*\)$'`
+		if expr "$link" : '.*/.*' > /dev/null; then
+			PRG="$link"
+		else
+			PRG=`dirname "$PRG"`/"$link"
+		fi
+	done
+	
+	PRGDIR=`dirname "$PRG"`
+	OGROOT=`cd "$PRGDIR/" ; pwd`
+	if [ -z "$OGROOT" ]; then
+		echo "ERR_OGROOT_NOT_DEFINED"
+		return $ERR_OGROOT_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+setclasspath() {
+    PWD_=`pwd`
+	mypath=.
+	cd $OGROOT
+
+	for i in `/bin/ls *.jar`; do
+		myclass="$i"
+		mypath=$mypath:$OGROOT/$myclass
+	done
+    
+    CLASSPATH=$mypath
+
+	if [ -z "$CLASSPATH" ]; then
+		return $ERR_CLASSPATH_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+start() {
+	java -classpath "$CLASSPATH" -DMGROOT=$MGROOT -DOGROOT=$OGROOT "$wizard" $machineName
+	sleep 3	
+}
+
+printerrdescr()
+{
+	errcode=$1
+	echo "${ErrDescr[$errcode]}"
+}
+
+nargs=$#
+# Some Checkings
+if [ $nargs -ne 1 ]; then
+echo "Usage: setup machineName"
+exit $ERR_STD_MISUSE 
+fi
+ 
+machineName=$1
+
+wizard="org.ourgrid.refactoring.deployer.worker.WorkerWizard"
+
+findogroot && setclasspath
+ret=$?
+
+if [ $ret -eq $OK ]; then
+	#execution
+	start
+else
+    errcode=$ret
+    printerrdescr $errcode
+    exit $errcode
+fi

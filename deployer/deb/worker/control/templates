@@ -1,0 +1,41 @@
+Template: ${package.name}/num_workers
+Type: string
+Description: How many workers do you want to install?(recommended=${cpus})
+
+Template: ${package.name}/invalid_num_workers
+Type: string
+Description: How many workers do you want to install? The input is invalid. It should be a number greater than 1 (recommended=${cpus})
+
+Template: ${package.name}/username
+Type: string
+Default: 
+Description: xmpp.ourgrid.username:
+
+Template: ${package.name}/servername
+Type: string
+Default: 
+Description: xmpp.ourgrid.servername:
+
+Template: ${package.name}/password
+Type: string
+Default: 
+Description: xmpp.ourgrid.password:
+
+Template: ${package.name}/peeraddress
+Type: string
+Description: Peer address:
+
+Template: ${package.name}/virtualization
+Type: select
+Choices: Vbox, Vserver, Not Virtualized
+Description: Select the type of virtualization to use
+
+Template: ${package.name}/idlenessdetector
+Type: select
+Choices: Yes, No
+Description: Activate idleness detector?
+
+Template: ${package.name}/idlenesstime
+Type: string
+Description: Idleness detection time(s):
+

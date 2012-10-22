@@ -1,0 +1,7 @@
+job : 
+label 	: SimpleJob4
+
+task :
+init  	: 
+remote 	: echo Hello World! >> $STORAGE/storageHelloWorld
+final   : get $STORAGE/storageHelloWorld storageHelloWorld

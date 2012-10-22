@@ -1,0 +1,3 @@
+# Defaults for Ourgrid Peer - sourced by /etc/init.d/peer
+# Start peer on boot?
+START=yes

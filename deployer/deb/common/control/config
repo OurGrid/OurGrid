@@ -1,0 +1,7 @@
+#!/bin/sh -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+db_set ${package.name}/user_password ourgrid
+db_input critical ${package.name}/user_password || true
+db_go

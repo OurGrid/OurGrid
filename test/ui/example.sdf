@@ -1,0 +1,6 @@
+[
+copyfrom="scp $machine:$remotefile $localfile";os="linux";servername="xmpp.ourgrid.org";copyto="scp $localfile $machine:$remotefile";remexec="ssh -x $machine $command";
+	username="user1";
+
+	username="user2";
+

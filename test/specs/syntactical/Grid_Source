@@ -1,0 +1,23 @@
+MYGUMP :
+	default		=	xptoxpto;
+
+	GUM :
+	name		=	moreia.lsd.ufcg.edu.br;
+	port		=	8888;
+	site		=	lsd.ufcg.edu.br;
+	bla		=	true;
+	
+	GUM	:
+	name		=	cascudo.lsd.ufcg.edu.br;
+	type		=	User_Agent;
+	os		=	Linux;
+	BogoMIPS 	= 	12.34;
+
+GUMP :
+	label 	= BlaBleBli;
+	URL	= rmi://some.place.edu:7777/gump;
+
+GUMP :
+        LABEL   = BloBlu;
+        url     = rmi://some.place.edu:8888/gump;
+		

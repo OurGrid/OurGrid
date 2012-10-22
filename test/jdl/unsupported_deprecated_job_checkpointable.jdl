@@ -1,0 +1,15 @@
+[
+	Name = "Checkpointable Job";
+	Type = "Job";
+	JobType = "checkpointable";
+	JobSteps = 1000;
+	CurrentStep = 0;
+		
+	VirtualOrganisation = "green";
+	Executable = "$JAVA_HOME/bin/java";
+	Arguments = "Sum sum.input sum.output sum.error";
+	InputSandbox = {"./job.jdl", "./example.jdl"};
+	OutputSandbox = { "job.jdl", "example.jdl"};
+	Requirements = other.GlueHostOperatingSystemRelease == "LINUX";
+	Rank = 10;
+]

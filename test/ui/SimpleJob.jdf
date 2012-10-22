@@ -1,0 +1,14 @@
+job : 
+label 	: SimpleJob
+
+task :
+remote 	: echo Hello World
+
+task :
+remote 	: echo Hello World
+
+task :
+remote 	: echo Hello World
+
+task :
+remote 	: echo Hello World

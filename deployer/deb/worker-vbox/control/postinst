@@ -1,0 +1,146 @@
+#!/bin/bash -e
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+recommended=$(grep -c processor /proc/cpuinfo)
+
+db_get ${package.name}/num_workers
+if  echo "$RET" | egrep -q '^[0-9]+$'; then
+	if [ "$RET" -ge 1 ]; then
+		echo
+	else
+		db_get ${package.name}/invalid_num_workers
+	fi
+else 
+	db_get ${package.name}/invalid_num_workers
+fi
+
+NUM_WORKERS="$RET"
+db_get ${package.name}/username
+USERNAME="$RET"
+db_get ${package.name}/servername
+SERVERNAME="$RET"
+db_get ${package.name}/password
+PASSWORD="$RET"
+db_get ${package.name}/peeraddress
+PEERADDRESS="$RET"
+db_get ${package.name}/idlenessdetector
+IDLENESS_DETECTOR="$RET"
+db_get ${package.name}/idlenesstime
+IDLENESS_TIME="$RET"
+
+
+VM_NAME="vm-"$USERNAME
+INSTALLATION_DIR="/etc/ourgrid"
+VM_IMAGES_DIR=$INSTALLATION_DIR/vbox_images
+IMAGE_NAME="og-image"
+IMAGE_DOWNLOADED_FILE="$IMAGE_NAME.tar.gz"
+
+function extract_image() {
+	echo
+	echo "================================================"
+	echo "  Extracting OurGrid Worker VirtualBox image ..."
+	echo "================================================"
+	
+	tar -xf $VM_IMAGES_DIR/$IMAGE_COMPACTED_FILE -C $VM_IMAGES_DIR || true
+	if [ $? -ne 0 ]; then
+		echo "Failed to extract image!"
+	fi
+}
+
+function prepare_environment() {
+	echo
+	echo "==========================="
+	echo "  Preparing Environment ..."
+	echo "==========================="
+	
+	#give user "ourgrid" X permissions
+	if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then 
+		echo "xhost +si:localuser:ourgrid" >> /etc/profile
+	fi	
+
+	ourvirt -m prepareEnvironment -h vbox -user ourgrid
+}
+
+#Download VBOX_IMAGE
+echo
+echo "================================================="
+echo "  Downloading OurGrid Worker VirtualBox image ..."
+echo "================================================="
+
+wget -nc -P $VM_IMAGES_DIR http://maven.ourgrid.org/repos/linux/vbox/linux-vbox/og-image.vdi
+
+#extract_image
+
+/bin/bash copyworkers-vbox "$NUM_WORKERS" "$USERNAME" "$SERVERNAME" "$PASSWORD" "$PEERADDRESS" "$IMAGE_FILE"
+
+if [ -e /etc/ourgrid/vmnames.conf ] ; then
+	deleteWorkerVMs /etc/ourgrid/vmnames.conf vbox
+	rm -f /etc/ourgrid/vmnames.conf
+fi
+
+for WORKER_NUM in $(seq 1 $NUM_WORKERS)
+do
+	echo
+	echo "==========================="
+	echo "  Configuring Worker $WORKER_NUM  "
+	echo "==========================="
+	
+	WORKER_BASE="/etc/ourgrid/worker-vbox"$WORKER_NUM
+	WORKER_PROPERTIES=$WORKER_BASE"/worker.properties"
+	
+	#VM CONFIGURATIONS
+	echo "vm.os.version=Ubuntu" >> $WORKER_PROPERTIES
+	echo "worker.executor=GENERIC" >> $WORKER_PROPERTIES
+	echo "vm.hypervisor.type=VBOX" >> $WORKER_PROPERTIES
+	echo "vm.disk.type=sata" >> $WORKER_PROPERTIES
+	echo "vm.os=linux" >> $WORKER_PROPERTIES
+	echo "vm.memory=128" >> $WORKER_PROPERTIES
+	echo "vm.password=worker" >> $WORKER_PROPERTIES
+	echo "vm.user=worker" >> $WORKER_PROPERTIES
+	echo "vm.start.timeout=120" >> $WORKER_PROPERTIES
+	
+	echo "vm.name=""$VM_NAME"_"$WORKER_NUM" >> $WORKER_PROPERTIES
+	echo $VM_NAME"_"$WORKER_NUM >> /etc/ourgrid/vmnames.conf
+	
+	NEW_DISK_PATH="$VM_IMAGES_DIR/$IMAGE_NAME"_"$(hostname)"_"$WORKER_NUM".vdi
+	echo "vm.disk.path=""$NEW_DISK_PATH" >> $WORKER_PROPERTIES
+	
+	#clone image
+	if [ ! -e "$NEW_DISK_PATH" ] ; then
+		if [ -e "$VM_IMAGES_DIR/$IMAGE_NAME".vdi ] ; then
+			ourvirt -m clone -h vbox -source "$VM_IMAGES_DIR/$IMAGE_NAME".vdi -target "$NEW_DISK_PATH"
+		else
+			echo "Error while cloning vbox image."
+			exit 1
+		fi
+	fi
+	
+	#IDLENESS DETECTOR
+	if echo $IDLENESS_DETECTOR | egrep -q Yes 
+	then
+		echo "worker.idlenessdetector=yes" >> $WORKER_PROPERTIES
+		echo "worker.idlenesstime="$IDLENESS_TIME >> $WORKER_PROPERTIES
+	fi
+	
+	#create brokers storage folder
+	STORAGE_FOLDER="/etc/ourgrid/worker-vbox"$WORKER_NUM"/.brokerstorage"
+	echo "worker.storagedir=""$STORAGE_FOLDER" >> $WORKER_PROPERTIES
+	mkdir -p $STORAGE_FOLDER
+	chmod -R 777 $STORAGE_FOLDER
+done
+
+prepare_environment
+
+chmod +x /etc/init.d/worker-vbox
+update-rc.d worker-vbox defaults 
+
+chown ourgrid /usr/bin/worker
+chown ourgrid /usr/bin/testjvm
+chown -R ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+rm -f /usr/bin/copyworkers-vbox
+rm -f "$VM_IMAGES_DIR/$IMAGE_NAME".vdi
+
+db_purge

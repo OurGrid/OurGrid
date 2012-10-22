@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# chkconfig: 016 20 95
+# description: Stops ourgrid-worker
+# processname: worker-stop
+
+### BEGIN INIT INFO
+# Provides:          worker
+# Required-Stop:     $remote_fs $syslog
+# Default-Stop:      0 1 6
+# Short-Description: Stops the worker module of OurGrid(ourgrid.org)
+### END INIT INFO
+
+su ourgrid -c "worker stop" &> /dev/null

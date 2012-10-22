@@ -1,0 +1,3 @@
+# Defaults for Ourgrid Worker - sourced by /etc/init.d/worker-vserver
+# Start worker-vserver on boot?
+START=yes

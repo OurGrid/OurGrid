@@ -1,0 +1,50 @@
+[
+	Name = "Normal Job";
+	Type = "Job";
+	JobType = "normal";
+	Executable = "$JAVA_HOME/bin/java";
+	InputSandboxBaseURI = "/home/ricardo/sim";
+	InputSandbox = {"Sim", "sim.input"};
+	OutputSandboxDestURI = {"output/output", "error/error"};
+	OutputSandboxBaseDestURI = "/home/ricardo/sim";
+	OutputSandbox = { "sim.output", "sim.error"};
+	Arguments = "Sim \"default_heuristic\" sim.input sim.output sim.error";
+	Prologue="/bin/false";
+	PrologueArguments=" -asdf";
+	Epilogue="/bin/false";
+	EpilogueArguments=" -asdf";
+	AllowZippedISB="false";
+	ExpiryTime = 1256667316539;
+	Environment={"SIM_SEED=31", "SIM_END=86400"};
+	
+	DataRequirements={[
+		DataCatalogType = "DLI";
+		DataCatalog = "https://cms.org:8877/dli";
+		InputData = {"lfn:/my/test.data1",
+					 "guid:44rr44rr77hh77kkaa3",
+					 "lds:my.test.dataset",
+					 "query:my_query"};
+	]};
+	DataAccessProtocol = {"https","gsiftp"};
+	OutputSE = "storage.lsd.ufcg.edu.br";
+
+	RetryCount = 3;
+	ShallowRetryCount = 1;
+	
+	VirtualOrganisation = "ourgrid";
+	
+	
+	
+	
+	Requirements = true;
+	Rank = 0;
+	FuzzyRank = false;
+	
+	UserTags = [
+		color = "red";
+		position = "12";
+		prodId = "cms_1234";
+	];
+	
+	
+]

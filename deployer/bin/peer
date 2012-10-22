@@ -1,0 +1,363 @@
+#!/bin/bash
+ 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ #
+ # Package:		OurGrid 4.0
+ #
+ # Description:	 This shell script takes care of starting and
+ # stopping OurGrid Peer.
+ #
+ # Copyright (c) 2002-2006 Universidade Federal de Campina Grande 
+ # 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+# OurGrid Version
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OGVERSION="4.0"
+
+# Setting macros
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OK=0
+NOK=1
+
+# Setting error codes (from 2 to 254)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ERR_BASE=64
+ERR_STD_MISUSE=$[ERR_BASE + 0]
+ERR_OGROOT_NOT_DEFINED=$[ERR_BASE + 1]
+ERR_VARS_NOT_DEFINED=$[ERR_BASE + 2]
+ERR_JAVAOPTIONS_NOT_DEFINED=$[ERR_BASE + 3]
+ERR_CLASSPATH_NOT_DEFINED=$[ERR_BASE + 4]
+ERR_JAVA_NOT_FOUND=$[ERR_BASE + 5]
+
+ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_OGROOT_NOT_DEFINED]="Variable OGROOT not defined" [$ERR_VARS_NOT_DEFINED]="BIN and LIB vars not defined" [$ERR_JAVAOPTIONS_NOT_DEFINED]="Java options not defined" [$ERR_CLASSPATH_NOT_DEFINED]="CLASSPATH variable not defined" [$ERR_JAVA_NOT_FOUND]="Could not find a valid Java VM")
+
+# Find OGROOT:                                          
+# $0 is the executable $OGROOT/peer or a link to it   
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+findogroot(){
+
+	PRG="$0"
+
+	while [ -h "$PRG" ]; do
+		ls=`ls -ld "$PRG"`
+		link=`expr "$ls" : '.*-> \(.*\)$'`
+		if expr "$link" : '.*/.*' > /dev/null; then
+			PRG="$link"
+		else
+			PRG=`dirname "$PRG"`/"$link"
+		fi
+	done
+	
+	PRGDIR=`dirname "$PRG"`
+	OGROOT=`cd "$PRGDIR/" ; pwd`
+	if [ -z "$OGROOT" ]; then
+		echo "ERR_OGROOT_NOT_DEFINED"
+		return $ERR_OGROOT_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+# Set the $VAR $BIN and $LIB
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setenvvars(){
+	VAR=$OGROOT/var
+	BIN=$OGROOT
+	LIB=$OGROOT/lib
+	SAMPLE=$OGROOT/sample
+	TEST=$OGROOT/test
+
+	if [ -z "$VAR" ] || [ -z "$BIN" ] || [ -z "$LIB" ] || [ -z "$SAMPLE" ] || [ -z "$TEST" ]; then
+		echo "ERR_VARS_NOT_DEFINED"
+		return $ERR_VARS_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+# Set the OGROOT and CLASSPATH including all libraries from $OGROOT/lib 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setclasspath(){
+    PWD_=`pwd`
+	mypath=.
+
+    cd "$LIB"
+	for i in `ls *.jar`; do
+        myclass="$LIB/$i" 
+		mypath=$mypath:$myclass
+	done
+    cd "$PWD_"
+	CLASSPATH="$mypath"
+
+	if [ -z "$CLASSPATH" ]; then
+		return $ERR_CLASSPATH_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+# Set the JAVAOPTION to invoke OurGrid classes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setjavaoptions(){
+        JAVAOPTIONS="-DOGROOT=$OGROOT"
+}
+
+# Start OurGrid Peer
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+pre_peer() {
+
+	mkdir -p "$OGROOT/log"
+
+}
+
+# Start OurGrid Peer GUI
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+gui() {
+	pre_peer
+	$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$GUImain" "$guicommand" &
+}
+
+# Starts OurGrid Peer
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+start() {
+	pre_peer
+	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+    pid=$!
+    sleep 7
+
+    if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
+    then
+		wait $pid
+        exit $?
+    fi
+}
+
+# Stop OurGrid Peer
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+stop() {
+	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
+
+}
+
+# Show OurGrid Peer Status
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+status() {
+	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand"
+	exit $?
+}
+
+printerrdescr()
+{
+	errcode=$1
+
+	echo "${ErrDescr[$errcode]}"
+}
+
+
+usage(){
+
+if [ $# -eq 0 ]; then
+	echo "Usage: peer command [command-options-and-arguments]"
+	echo "	where command is start, stop, status, addbroker, removebroker, removeworker, gui and query"
+	echo "	where command-options-and-arguments depend on the specific command"
+	echo
+	echo "For OurGrid updates and additional information, see the "
+	echo "OurGrid Project home page at http://www.ourgrid.org/ "
+else
+	case "$1" in
+		start) echo "Usage: peer start"
+		;;
+
+		stop) echo "Usage: peer stop"
+		;;
+		
+		status) echo "Usage: peer status"
+		;;
+
+		addbroker) echo "Usage: peer addbroker <username@servername> <password>"
+		;;
+
+		removebroker) echo "Usage: peer removebroker <username@servername>"
+		;;
+
+		removeworker) echo "Usage: peer removeworker <username@servername>"
+		;;
+
+ 		gui) echo "Usage: peer gui"
+ 		;;
+
+		query) echo "Usage: peer query <SQL SELECT>"
+		;;
+		
+		version)
+			echo "OurGrid $OGVERSION - Peer"
+			echo
+			echo "For OurGrid updates and additional information, see the "
+			echo "OurGrid Project home page at http://www.ourgrid.org/ "
+		;;
+		*) echo "no implemented" 
+	esac
+fi
+exit $ERR_STD_MISUSE 
+}
+
+usage_commands(){
+
+	UNK_CMD=$1
+	
+	echo "peer: Unknown command '$UNK_CMD'"
+	echo
+	echo "OURGRID commands are:"
+	echo "	start		 Starts peer on the local machine"
+	echo "	stop		 Stops peer on the local machine"
+	echo "	status		 Shows current peer status"
+	echo "	addbroker	 Add a broker"
+	echo "	removebroker Remove a broker"
+	echo "	removeworker Remove a peer worker"
+	echo "	gui		     Starts peer gui"
+	echo "	query 		 Executes a SQL SELECT in the peer database"
+
+	exit $ERR_STD_MISUSE 
+}
+
+nargs=$#
+
+if [ $nargs -eq 0 ]; then
+	usage
+fi
+
+if [ "$1" = "help" ] || [ "$1" = "-h" ]; then
+	shift
+	usage $1
+fi
+
+if [ "$1" = "version" ] || [ "$1" = "-v" ]; then
+	usage version
+fi
+
+
+if [ "$1" = "start" ] || [ "$1" = "stop" ] || [ "$1" = "status" ] || [ "$1" = "gui" ]; then
+	if [ $nargs -eq 1 ]; then
+		COMMAND_NAME=$1
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "addbroker" ]; then
+	if [ $nargs -eq 3 ]; then
+		COMMAND_NAME=$1
+		USER_NAME=$2
+		USER_PASSWD=$3
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "removebroker" ]; then
+	if [ $nargs -eq 2 ]; then
+		COMMAND_NAME=$1
+		USER_NAME=$2
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "removeworker" ]; then
+	if [ $nargs -eq 2 ]; then
+		COMMAND_NAME=$1
+		COMMAND_ARGS=$2
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "query" ]; then
+	if [ $nargs -eq 2 ]; then
+                COMMAND_NAME=$1
+                COMMAND_ARGS=$2
+	else 
+		usage $1
+	fi
+fi
+
+if [ -z "$COMMAND_NAME" ]; then
+		usage_commands $1
+fi
+
+# In this point, the user has invoked OurGrid correctly. So, we
+# have to launch the appropriated behaviour.
+
+main="org.ourgrid.peer.ui.sync.Main"
+GUImain="org.ourgrid.peer.ui.async.Main"
+startcommand="start"
+stopcommand="stop"
+statuscommand="status"
+addbrokercommand="addbroker"
+removebrokercommand="removebroker"
+removeworkercommand="removeworker"
+guicommand="gui"
+querycommand="query"
+
+mgname=`basename $0`
+
+# Check 
+findogroot && setenvvars && setclasspath && setjavaoptions
+
+ret=$?
+
+if [ $ret -eq $OK ]; then
+
+	sh $BIN/testjvm
+	ret=$?
+	if [ $ret -ne $OK ]; then
+		printerrdescr $ERR_JAVA_NOT_FOUND
+		exit $errcode
+	fi
+		
+	APP_JAVA=`cat javalocation`
+
+	case "$COMMAND_NAME" in
+		start)
+			start
+		;;
+		
+		stop)
+			stop
+		;;
+
+		status)
+			status
+			exit $?
+		;;
+		gui)
+			gui
+			exit $?
+		;;
+		addbroker)
+			$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addbrokercommand" "$USER_NAME" "$USER_PASSWD"
+		;;
+		removebroker)
+			$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removebrokercommand" "$USER_NAME"
+		;;
+		removeworker)
+			$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removeworkercommand" "$COMMAND_ARGS"
+		;;
+		query)
+                       $APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$querycommand" "$COMMAND_ARGS"
+		;;
+		*) usage
+			exit $ret
+			;;
+
+	esac
+else
+	errcode=$ret
+	printerrdescr $errcode
+	exit $errcode
+fi
+

@@ -1,0 +1,36 @@
+#!/bin/bash
+# Source debconf library.
+. /usr/share/debconf/confmodule
+
+db_get ${package.name}/username
+USERNAME="$RET"
+db_get ${package.name}/servername
+SERVERNAME="$RET"
+db_get ${package.name}/password
+PASSWORD="$RET"
+
+PROPERTIES_FILE=/etc/ourgrid/ds/ds.properties
+
+sed -i 's/{username}/'$USERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{servername}/'$SERVERNAME'/g' $PROPERTIES_FILE
+sed -i 's/{password}/'$PASSWORD'/g' $PROPERTIES_FILE
+
+CERTIFICATE_FILE=/etc/ourgrid/ds/certification/mycertificate/mycertificate.cer
+mkdir -p /etc/ourgrid/ds/certification/mycertificate/
+CERTIFICATE_KEYS=$(java -Djava.ext.dirs=/usr/lib/ourgrid/ org.ourgrid.common.util.SelfSignedSetup $USERNAME $SERVERNAME $CERTIFICATE_FILE)
+DS_PUBLICKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f1)
+DS_PRIVATEKEY=$(echo $CERTIFICATE_KEYS | cut -d' ' -f2)
+echo "" >> $PROPERTIES_FILE
+echo "commune.privatekey="$DS_PRIVATEKEY >> $PROPERTIES_FILE
+echo "commune.publickey="$DS_PUBLICKEY >> $PROPERTIES_FILE
+echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
+
+
+chmod +x /etc/init.d/ds
+update-rc.d ds defaults
+
+chown ourgrid /usr/bin/ds
+chown ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+db_purge

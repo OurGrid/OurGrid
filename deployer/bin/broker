@@ -1,0 +1,390 @@
+#!/bin/bash
+ 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+ #
+ # Package:		Broker 4.0
+ #
+ # Description:	 This shell script takes care of starting and stopping Broker.
+ #
+ # Copyright (c) 2008 Universidade Federal de Campina Grande 
+ # 
+ # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+# OurGrid Version
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OGVERSION="4.0"
+
+# Setting macros
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+OK=0
+NOK=1
+
+# Setting error codes (from 2 to 254)
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+ERR_BASE=64
+ERR_STD_MISUSE=$(($ERR_BASE + 0))
+ERR_BROKERROOT_NOT_DEFINED=$(($ERR_BASE + 1))
+ERR_VARS_NOT_DEFINED=$(($ERR_BASE + 2))
+ERR_JAVAOPTIONS_NOT_DEFINED=$(($ERR_BASE + 3))
+ERR_CLASSPATH_NOT_DEFINED=$(($ERR_BASE + 4))
+ERR_JAVA_NOT_FOUND=$(($ERR_BASE + 5))
+
+ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_BROKERROOT_NOT_DEFINED]="Variable BROKERROOT not defined" [$ERR_VARS_NOT_DEFINED]="BIN and LIB vars not defined" [$ERR_JAVAOPTIONS_NOT_DEFINED]="Java options not defined" [$ERR_CLASSPATH_NOT_DEFINED]="CLASSPATH variable not defined" [$ERR_JAVA_NOT_FOUND]="Could not find a valid Java VM")
+
+# Find BROKERROOT:                                          
+# $0 is the executable $BROKERROOT/broker or a link to it   
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+findmgroot(){
+
+	PRG="$0"
+
+	while [ -h "$PRG" ]; do
+		ls=`ls -ld "$PRG"`
+		link=`expr "$ls" : '.*-> \(.*\)$'`
+		if expr "$link" : '.*/.*' > /dev/null; then
+			PRG="$link"
+		else
+			PRG=`dirname "$PRG"`/"$link"
+		fi
+	done
+	
+	PRGDIR=`dirname "$PRG"`
+	BROKERROOT=`cd "$PRGDIR/" ; pwd`
+	if [ -z "$BROKERROOT" ]; then
+		echo "ERR_BROKERROOT_NOT_DEFINED"
+		return $ERR_BROKERROOT_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+
+
+# Set the BROKERROOT and CLASSPATH including all libraries from $BROKERROOT/lib 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setclasspath(){
+    PWD_=`pwd`
+	mypath=.
+
+    cd "$LIB"
+	for i in `ls *.jar`; do
+        myclass="$LIB/$i" 
+		mypath=$mypath:$myclass
+	done
+    cd "$PWD_"
+	CLASSPATH=$mypath
+
+	if [ -z "$CLASSPATH" ]; then
+		return $ERR_CLASSPATH_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+# Set the JAVAOPTION to invoke Broker classes
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setjavaoptions(){
+    if [ -z ${OGROOT} ]; then
+        JAVAOPTIONS="-DMGROOT=$BROKERROOT"
+    else
+        JAVAOPTIONS="-DMGROOT=$BROKERROOT -DOGROOT=$OGROOT"
+    fi
+}
+
+# Set the $BIN and $LIB
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+setenvvars(){
+	BIN=$BROKERROOT/
+	LIB=$BROKERROOT/lib
+
+	if [ -z "$BIN" ] || [ -z "$LIB" ] ; then
+		echo "ERR_VARS_NOT_DEFINED"
+		return $ERR_VARS_NOT_DEFINED
+	else
+		return $OK
+	fi
+}
+
+start() {
+	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+    pid=$!
+    sleep 7
+
+    if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
+    then
+		wait $pid
+        exit $?
+    fi
+}
+
+# +++++  Stop Broker
+stop() {
+	$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand" "$COMMAND_ARGS"
+}
+
+printerrdescr(){
+	errcode=$1
+
+	echo "${ErrDescr[$errcode]}"
+}
+
+print_commands() {
+
+	echo "BROKER commands are:"
+	echo "  start                                   Start Broker on the local machine (base machine)"
+	echo "  stop                                    Stop Broker on the local machine"
+	echo "           -f                                  Forces Broker to stop"
+	echo "  restart                                 Stop Broker if it was running and start it"
+	echo "  gui                                     Start Broker's GUI"
+	echo "  status                                  Show current status of Broker"
+	echo "           -i=jobid                            Use this flag for information on a certain job"
+	echo "           -s=state                            Use this flag for information jobs with a certain status"
+	echo "           -l=label                            Use this flag for information on jobs with a certain label"
+	echo "  addjob <job-description-file>           Add a job for execution on Broker environment"
+	echo "  canceljob <job-id>                      Cancel a job execution"	
+	echo "  waitforjob <job-id>                     Stop and wait until the job specified by <job-id> is done"	
+	echo "  setgrid <grid-description-file>         Set Broker's gumps"
+	echo "  clean <job-id>                          Clean the finished jobs"
+
+
+}
+
+usage(){
+
+if [ $# -eq 0 ]; then
+	echo "Usage: broker command [command-options-and-arguments]"
+	echo
+	print_commands
+	echo	
+	echo "command-options-and-arguments depends on the specific command"
+	echo
+	echo "For Broker updates and additional information, see the "
+	echo "OurGrid Project home page at http://www.ourgrid.org/ "
+else
+	case "$1" in
+		start) echo "Usage: broker start"
+		;;
+		stop) echo "Usage: broker stop [-f]"
+		;;
+		restart) echo "Usage: broker restart"
+		;;
+		status) echo "Usage: broker status [-l=label s=RUNNING|FINISHED|CANCELED|FAILED|READY -i=jobid]"
+		;;
+		addjob) echo "Usage: broker addjob <job-description-file>"
+		;;
+		canceljob) echo "Usage: broker canceljob <job-id>"
+		;;
+		waitforjob) echo "Usage: broker waitforjob <job-id>"
+		;;
+		setgrid) echo "Usage: broker setgrid <grid-description-file>"
+		;;
+		clean)echo "Usage: broker clean <job-id>"
+		;;
+		version) 
+			echo "OurGrid $OGVERSION - Broker"
+			echo
+			echo "For Broker updates and additional information, see the "
+			echo "OurGrid Project home page at http://www.ourgrid.org/ "
+
+		;;
+
+		
+		*) echo "not implemented" 
+	esac
+fi
+exit $ERR_STD_MISUSE 
+}
+
+usage_commands(){
+
+	UNK_CMD=$1
+	
+	echo "broker: Unknown command '$UNK_CMD'"
+	echo
+
+	print_commands
+
+	exit $ERR_STD_MISUSE 
+
+}
+
+nargs=$#
+default_command="gui"
+
+if [ $nargs -eq 0 ]; then
+	COMMAND_NAME=$default_command
+fi
+
+if [ "$1" = "help" ] || [ "$1" = "-h" ]; then
+	shift
+	usage $1
+fi
+
+if [ "$1" = "version" ] || [ "$1" = "-v" ]; then
+	shift
+	usage version
+fi
+
+
+if [ "$1" = "start" ] || [ "$1" = "restart" ] || [ "$1" = "gui" ]; then
+	if [ $nargs -eq 1 ]; then
+		COMMAND_NAME=$1
+		COMMAND_ARGS=$2
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "stop" ]; then
+        if [ $nargs -eq 2 ]; then
+		COMMAND_NAME=$1
+		COMMAND_ARGS=$2
+	else
+		if [ $nargs -eq 1 ]; then
+			COMMAND_NAME=$1
+			COMMAND_ARGS=""
+		else
+			usage $1
+		fi
+	fi
+fi
+
+if [ "$1" = "status" ]; then
+   if [ $nargs -gt 4 ]; then
+        usage $1
+   else 
+       COMMAND_NAME=$1
+       COMMAND_ARGS=$2 
+       COMMAND_ARGS2=$3 
+       COMMAND_ARGS3=$4
+   fi
+fi
+        
+
+
+if [ "$1" = "addjob" ] || [ "$1" = "canceljob" ] || [ "$1" = "waitforjob" ] || [ "$1" = "setgrid" ]; then
+	if [ $nargs -eq 2 ]; then
+		COMMAND_NAME=$1
+		COMMAND_ARGS=$2
+	else
+		usage $1
+	fi
+fi
+
+if [ "$1" = "clean" ]; then
+	if [ $nargs -eq 2 ]; then
+		COMMAND_NAME=$1
+		COMMAND_ARGS=$2
+	else 
+		if [ $nargs -eq 1 ]; then
+			COMMAND_NAME=$1
+			COMMAND_ARGS=""
+		else 
+			usage $1
+		fi
+	fi
+fi
+
+if [ -z "$COMMAND_NAME" ]; then
+		usage_commands $1
+fi
+
+# In this point, the user has invoked Broker correctly. So, we
+# have to launch the appropriated behaviour.
+
+main="org.ourgrid.broker.ui.sync.Main"
+GUImain="org.ourgrid.broker.ui.async.Main"
+startcommand="start"
+stopcommand="stop"
+statuscommand="status"
+setgridcommand="setgrid"
+addjobcommand="addjob"
+canceljobcommand="canceljob"
+waitforjobcommand="waitforjob"
+cleancommand="clean"
+gui="gui"
+
+
+# Some Checkings 
+findmgroot && setenvvars && setclasspath && setjavaoptions 
+
+ret=$?
+
+if [ $ret -eq $OK ]; then
+
+	sh $BROKERROOT/testjvm
+	ret=$?
+	if [ $ret -ne $OK ]; then
+		printerrdescr $ERR_JAVA_NOT_FOUND
+		exit $errcode
+	fi
+		
+	APP_JAVA=`cat javalocation`
+
+	#if [ "$COMMAND_NAME" = "start" ] || [ "$COMMAND_NAME" = "stop" ] || [ "$COMMAND_NAME" = "restart" ] || [ "$COMMAND_NAME" = "status" ] || [ "$COMMAND_NAME" = "addjob" ] || [ "$COMMAND_NAME" = "canceljob" ]  || [ "$COMMAND_NAME" = "waitforjob" ] ||  [ "$COMMAND_NAME" = "setgrid" ] || [ "COMMAND_NAME" = "clean" ] ; then
+	 #      	$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" 
+	#fi
+
+	case "$COMMAND_NAME" in
+		start)
+			start
+			;;
+		
+		stop)
+			stop
+			;;
+
+		restart)
+			echo "Restarting BROKER..."
+			stop 
+			sleep 3
+			start
+			;;
+		
+		status)
+    		$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand" "$COMMAND_ARGS" "$COMMAND_ARGS2" "$COMMAND_ARGS3"
+			;;
+
+		addjob)
+			$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addjobcommand" "$COMMAND_ARGS"
+			;;	
+			
+		canceljob)
+			$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$canceljobcommand" "$COMMAND_ARGS"
+			;;	
+			
+		waitforjob)
+			$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$waitforjobcommand" "$COMMAND_ARGS"
+			;;
+			
+		setgrid)
+			$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$setgridcommand" "$COMMAND_ARGS"
+			;;
+
+		gui)
+			echo "Starting Broker GUI"
+			$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$GUImain" "$gui" "$COMMAND_ARGS" &
+			;;
+
+		clean)
+			if [ $nargs -eq 1 ]; then
+				$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$cleancommand"
+			else
+				$APP_JAVA/java -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$cleancommand" "$COMMAND_ARGS"
+			fi
+			;;
+		*) usage
+			exit $ret
+			;;
+			
+	esac
+else
+	errcode=$ret
+	printerrdescr $errcode
+	exit $errcode
+fi
+
+
+
+
+

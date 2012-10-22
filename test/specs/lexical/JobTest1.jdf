@@ -1,0 +1,22 @@
+JOB		: 
+REQUIREMENTS	=	OS == Linux && PLAYPEN_SIZE >= 200;
+INIT		=	sample/init_script1;
+INPUT		=	PUT sample/execute $PLAYPEN; IF (PLAYPEN_SIZE < 300) THEN { PUT sample/input1 $PLAYPEN/input; } ELSE { PUT sample/input2 $PLAYPEN/input; }
+REMOTE		=	$PLAYPEN/execute input1;
+OUTPUT		=	GET $PLAYPEN/output sample/output_$TASK;
+FINAL		=	sample/final_script1;
+
+TASK		:
+
+TASK		:
+
+INPUT		=	PUT sample/input3 $PLAYPEN/input; PUT sample/execute $PLAYPEN;
+
+TASK		:
+
+TASK		:
+INIT		=	sample/init_script2;
+INPUT		=	STORE sample/execute2 $STORAGE; STORE sample/input1 $STORAGE;
+REMOTE		=	$STORAGE/execute2 input1;
+OUTPUT		=	GET $STORAGE/output2 sample/output_$TASK;
+FINAL		=	sample/final_script2;

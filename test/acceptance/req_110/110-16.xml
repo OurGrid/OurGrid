@@ -1,0 +1,26 @@
+<trusts>
+ <trust>
+      <name>educationalInstitutions</name>
+      <priority></priority> 
+      <peer>
+         <name>peerE</name>
+         <publickey>keyxptopeerE</publickey>
+      </peer>
+      <peer>
+         <name>peerF</name>
+         <publickey>keyxptopeerF</publickey>
+      </peer>            
+ </trust>
+ <trust>
+      <name>lesssecure</name>
+      <priority>1</priority> 
+      <peer>
+         <name>peerA</name>
+         <publickey>keyxptopeerA</publickey>
+      </peer>
+      <peer>
+         <name>peerB</name>
+         <publickey></publickey>
+      </peer>            
+ </trust>
+</trusts>

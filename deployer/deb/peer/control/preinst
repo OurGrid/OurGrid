@@ -1,0 +1,5 @@
+#!/bin/sh
+if [ "$1" = upgrade ]; then
+	peer stop
+fi
+exit 0

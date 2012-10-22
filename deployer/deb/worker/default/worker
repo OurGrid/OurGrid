@@ -1,0 +1,3 @@
+# Defaults for Ourgrid Worker - sourced by /etc/init.d/worker
+# Start worker on boot?
+START=no

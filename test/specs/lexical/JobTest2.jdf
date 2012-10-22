@@ -1,0 +1,6 @@
+JOB		: 
+INIT		=	"sample/init script1" ;
+INPUT		=	PUT "sample/execute script1" $PLAYPEN ;
+REMOTE		=	"$PLAYPEN/execute script1" ;
+OUTPUT		=	GET $PLAYPEN/output "sample/output $TASK" ;
+FINAL		=	"sample/final script1" ;

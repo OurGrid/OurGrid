@@ -1,0 +1,11 @@
+[
+	Name = "Diff Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandboxBaseURI = "../acceptance/broker"; 
+	InputSandbox = { "file1.txt", "file2.txt" };
+	Executable = "diff";
+	Arguments = "file1.txt file2.txt";
+	Requirements = other.GlueHostMainMemoryRAMSize == 256 || other.ExecutionEnvironmentMainMemorySize == 256;
+	Rank = 0; 
+]

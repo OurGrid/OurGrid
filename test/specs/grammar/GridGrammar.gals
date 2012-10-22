@@ -1,0 +1,50 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+
+#Tokens
+GUMP
+
+GUM
+String
+int
+real
+true
+false
+"="
+":"
+";"
+#NonTerminals
+<resource>
+<gump>
+<gum>
+
+<gump_entry>
+<attributes>
+<value>
+<boolean>
+
+#Grammar
+<resource> ::= 	<gump> | 
+		<gum> ;
+
+<gump> ::= GUMP ":" <attributes> <gump_entry> ;
+<gump_entry> ::= <gum> | î ;
+<gum> ::= GUM ":" <attributes> <gum> | î ;
+<attributes> ::= String "=" #1 <value> ";" ;
+<value> ::= 	String <value> | 
+             	int <value> | 
+		real <value> | 
+		<boolean> | 
+		î ;
+
+<boolean> ::= #2 true | #3 false ;

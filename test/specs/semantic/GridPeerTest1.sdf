@@ -1,0 +1,13 @@
+WORKERDEFAULTS:
+	type : ualinux
+	MEM : 300
+	OS : solaris
+	
+	WORKER : 
+		username : worker1
+		servername : jabber.lsd
+		OS : linux
+	WORKER :
+		username : worker2
+		servername : jabber.lsd
+		MEM : 200

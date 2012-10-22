@@ -1,0 +1,14 @@
+JOB:  
+label:	testing:label
+REQUIREMENTS:	OS == Linux && PLAYPEN_SIZE >= 200
+INIT:
+	PUT sample/execute .
+	IF (PLAYPEN_SIZE < 300) THEN 
+		PUT "sample/input 1" input1
+		STORE sample/input2 "input 2"
+	ELSE
+		PUT sample/input2 $STORAGE/input
+	ENDIF
+REMOTE:	$PLAYPEN/execute input
+
+TASK:

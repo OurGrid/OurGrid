@@ -1,0 +1,6 @@
+#!/bin/sh
+if [ "$1" = purge ]; then
+	update-rc.d ds remove
+	rm -rf /var/log/ourgrid/ds*.log*
+fi
+exit 0

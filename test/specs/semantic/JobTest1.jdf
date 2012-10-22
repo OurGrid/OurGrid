@@ -1,0 +1,26 @@
+JOB:  
+label:	testing:label
+REQUIREMENTS:	OS ==Linux && PLAYPEN_SIZE >=200
+INIT:
+	PUT sample/execute .
+	IF (PLAYPEN_SIZE < 300) THEN 
+		PUT sample/input1 input
+		STORE sample/input2 input
+	ELSE
+		PUT sample/input2 $STORAGE/input
+	ENDIF
+REMOTE:	$PLAYPEN/execute input
+
+TASK:
+REMOTE:	$STORAGE/execute2 input1
+
+TASK:
+INIT: none
+FINAL: 
+	GET t1 teste/result:1
+ 	GET t2 teste/result:2
+	IF ((XPTO >= 2 && IN_PATH T) || BLA != linux) THEN
+		GET $STORAGE/t2 teste/result3
+	ENDIF
+TASK:
+remote: xpto_script:1

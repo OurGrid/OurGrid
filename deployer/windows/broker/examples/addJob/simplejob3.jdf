@@ -1,0 +1,7 @@
+job : 
+label 	: SimpleJob3
+
+task :
+init  	: store Fat.class Fat.class
+remote 	: java -cp .:$STORAGE Fat 3 261147332 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK

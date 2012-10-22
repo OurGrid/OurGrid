@@ -1,0 +1,7 @@
+#!/bin/sh
+if [ "$1" = purge ]; then
+	su $SUDO_USER -c "rm -rf $HOME/.broker/broker*.log*"
+	su $SUDO_USER -c "rm -rf $HOME/.broker/logs"
+	rm -rf /etc/ourgrid/broker
+fi
+exit 0

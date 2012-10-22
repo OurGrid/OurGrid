@@ -1,0 +1,364 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<query name="getCommandsSince">
+		<![CDATA[
+			SELECT
+				c
+			FROM
+				Command c
+			WHERE
+					c.lastModified >= :timeOfChange
+				AND c.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getProcessSince">
+		<![CDATA[
+			SELECT
+				gp
+			FROM
+				GridProcess gp
+			WHERE
+					gp.lastModified >= :timeOfChange
+				AND gp.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getTasksSince">
+		<![CDATA[
+			SELECT
+				t
+			FROM
+				Task t
+			WHERE
+					t.lastModified >= :timeOfChange
+				AND t.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getJobsSince">
+		<![CDATA[
+			SELECT
+				j
+			FROM
+				Job j
+			WHERE
+					j.lastModified >= :timeOfChange
+				AND j.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getLoginsSince">
+		<![CDATA[
+			SELECT
+				l
+			FROM
+				Login l
+			WHERE
+					l.lastModified >= :timeOfChange
+				AND l.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getUsersSince">
+		<![CDATA[
+			SELECT
+				u
+			FROM
+				User u
+			WHERE
+					u.lastModified >= :timeOfChange
+				AND u.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getPeersSince">
+		<![CDATA[
+			SELECT
+				p
+			FROM
+				Peer p
+			WHERE
+					p.lastModified >= :timeOfChange
+				AND p.lastModified < :until
+		]]>
+	</query>
+	
+	<query name="getAttributesSince">
+		<![CDATA[
+			SELECT
+				a
+			FROM
+				Attribute a
+			WHERE
+					a.lastModified >= :timeOfChange
+				AND a.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getWorkersSince">
+		<![CDATA[
+			SELECT
+				w
+			FROM
+				Worker w
+			WHERE
+					w.lastModified >= :timeOfChange
+				AND w.lastModified < :until
+		]]>
+	</query>
+
+	<query name="getPeer">
+		<![CDATA[
+			SELECT
+				p
+			FROM
+				Peer p
+			WHERE
+				p.address = :peerID
+		]]>
+	</query>
+
+	<query name="countJobs">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				Job
+		]]>
+	</query>
+	
+	<query name="loadJobsFromPeer">
+		<![CDATA[
+			SELECT 
+					j 
+			FROM 
+				Job j, 
+				User u, 
+				Peer p 
+			WHERE 
+					j.login.user.address = u.address
+				AND u.peer.address = p.address 
+				AND p.address = :peerId
+		]]>
+	</query>
+	<query name="countJobsFromPeer">
+		<![CDATA[
+			SELECT
+				count(j)
+			FROM
+				Job j,
+				User u,
+				Peer p
+			WHERE
+					j.login.user.address = u.address
+				AND u.peer.address = p.address 
+				AND p.address = :peerId
+		]]>
+	</query>
+	<query name="loadTasksOfJob">
+		<![CDATA[
+			SELECT
+				t
+			FROM
+				Task t,
+				Job j
+			WHERE
+					t.job.id = j.id
+				AND j.id = :jobId
+		]]>
+	</query>
+
+	
+	<query name="collectPeerInfo">
+		<![CDATA[
+			SELECT
+				p
+			FROM
+				Peer p
+			WHERE
+					p.address = :peerId
+		]]>
+	</query>
+	
+	<query name="collectWorkerInfo">
+		<![CDATA[
+			SELECT
+				w
+			FROM
+				Worker w
+			WHERE
+					w.peer.address = :peerId
+				AND w.lastModified >= :timeOfChange
+		]]>
+	</query>
+		
+	<query name="collectAttributeInfo">
+		<![CDATA[
+			SELECT
+				att
+			FROM
+				Attribute att
+			WHERE
+					att.worker.peer.address = :peerId
+				AND att.lastModified >= :timeOfChange
+		]]>
+	</query>
+		
+	<query name="collectWorkerStatusChangeInfo">
+		<![CDATA[
+			SELECT
+				wsc
+			FROM
+				WorkerStatusChange wsc
+			WHERE
+					wsc.lastModified >= :timeOfChange
+				AND wsc.lastModified < :until
+		]]>
+	</query>
+				
+	<query name="collectUserInfo">
+		<![CDATA[
+			SELECT
+				user
+			FROM
+				User user
+			WHERE
+					user.peer.address = :peerId
+				AND user.lastModified >= :timeOfChange
+		]]>
+	</query>
+						
+	<query name="collectLoginInfo">
+		<![CDATA[
+			SELECT
+				login
+			FROM
+				Login login
+			WHERE
+					login.user.peer.address = :peerId
+				AND login.lastModified >= :timeOfChange
+		]]>
+	</query>
+						
+	<query name="collectJobInfo">
+		<![CDATA[
+			SELECT
+				job
+			FROM
+				Job job
+			WHERE
+					job.login.user.peer.address = :peerId
+				AND job.lastModified >= :timeOfChange
+		]]>
+	</query>
+						
+	<query name="collectTaskInfo">
+		<![CDATA[
+			SELECT
+				task
+			FROM
+				Task task
+			WHERE
+					task.job.login.user.peer.address = :peerId
+				AND task.lastModified >= :timeOfChange
+		]]>
+	</query>
+						
+	<query name="collectExecutionInfo">
+		<![CDATA[
+			SELECT
+				exec
+			FROM
+				GridProcess exec
+			WHERE
+					exec.task.job.login.user.peer.address = :peerId
+				AND exec.lastModified >= :timeOfChange
+		]]>
+	</query>
+						
+	<query name="collectCommandInfo">
+		<![CDATA[
+			SELECT
+				c
+			FROM
+				Command c
+			WHERE
+					c.process.task.job.login.user.peer.address = :peerId
+				AND c.lastModified >= :timeOfChange
+		]]>
+	</query>
+<!-- 
+						
+	<query name="collectFileTransferInfo">
+		<![CDATA[
+			SELECT
+				ft
+			FROM
+				FileTransfer ft
+			WHERE
+					ft.replica.task.job.user.peer.address = :peerId
+				AND ft.lastModified >= :timeOfChange
+		]]>
+	</query>
+	-->
+	<query name="collectRemoteWorkersInfo">
+		<![CDATA[
+			SELECT
+				wr
+			FROM
+				Worker wr, GridProcess r
+			WHERE
+					r.task.job.login.user.peer.address = :peerId
+				AND	r.worker.peer.address != :peerId
+				AND wr.id = r.worker.id
+				AND wr.lastModified >= :timeOfChange
+		]]>
+	</query>
+	
+	<query name="collectRemotePeersInfo">
+		<![CDATA[
+			SELECT
+				rw.peer
+			FROM
+				Worker rw, GridProcess r
+			WHERE
+					r.task.job.login.user.peer.address = :peerId
+				AND	r.worker.peer.address != :peerId
+				AND rw.id = r.worker.id
+				AND rw.peer.lastModified >= :timeOfChange
+		]]>
+	</query>
+	
+	<query name="collectRemoteAttributesInfo">
+		<![CDATA[
+			SELECT
+				att
+			FROM
+				Attribute att, Worker rw, GridProcess r
+			WHERE
+					r.task.job.login.user.peer.address = :peerId
+				AND	r.worker.peer.address != :peerId
+				AND att.worker.id = r.worker.id
+				AND att.lastModified >= :timeOfChange
+		]]>
+	</query>
+	
+	<query name="collectRemoteWorkerStatusChangeInfo">
+		<![CDATA[
+			SELECT
+				wsc
+			FROM
+				WorkerStatusChange wsc, Worker rw, GridProcess r
+			WHERE
+					r.task.job.login.user.peer.address = :peerId
+				AND	r.worker.peer.address != :peerId
+				AND wsc.worker.id = r.worker.id
+				AND wsc.lastModified >= :timeOfChange
+		]]>
+	</query>
+</hibernate-mapping>

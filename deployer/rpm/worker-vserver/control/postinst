@@ -1,0 +1,154 @@
+#!/bin/bash -e
+# Source debconf library.
+
+recommended=$(grep -c processor /proc/cpuinfo)
+
+NUM_WORKERS=$recommended
+USERNAME=$(hostname)
+SERVERNAME="xmpp.ourgrid.org"
+PASSWORD="xmpp.ourgrid.org"
+PEERADDRESS="peer-lsd@xmpp.ourgrid.org"
+IDLENESS_DETECTOR="yes"
+IDLENESS_TIME="1200"
+
+
+VM_NAME="vm-"$USERNAME
+INSTALLATION_DIR="/etc/ourgrid"
+WORKER_USER="worker"
+VM_IMAGES_DIR=$INSTALLATION_DIR/vserver_images
+IMAGE_FILE="linux-vserver-20110509.tar.bz2"
+
+
+function prepare_environment() {
+	echo
+	echo "==========================="
+	echo "  Preparing Environment ..."
+	echo "==========================="
+	
+	#give user "ourgrid" X permissions
+	if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then 
+		echo "xhost +si:localuser:ourgrid" >> /etc/profile
+	fi	
+
+	ourvirt -m prepareEnvironment -h vserver -user ourgrid
+}
+
+function configure_worker_properties() {
+	
+	# Configure the worker's properties to use vserver executor
+
+	echo "vm.os.version=Ubuntu" >> $WORKER_PROPERTIES
+	echo "worker.executor=GENERIC" >> $WORKER_PROPERTIES
+	echo "vm.hypervisor.type=VSERVER" >> $WORKER_PROPERTIES
+	echo "vm.disk.path=/etc/ourgrid/vserver_images/linux-vserver-20110509.tar.bz2" >> $WORKER_PROPERTIES
+	echo "vm.name="$CURRENT_VM_NAME >> $WORKER_PROPERTIES
+	echo "vm.password=worker" >> $WORKER_PROPERTIES
+	echo "vm.disk.type=ide" >> $WORKER_PROPERTIES
+	echo "vm.user="$WORKER_USER >> $WORKER_PROPERTIES
+	echo "vm.os=linux" >> $WORKER_PROPERTIES
+	echo "vm.memory=128" >> $WORKER_PROPERTIES
+	echo "confdir="$WORKER_BASE >> $WORKER_PROPERTIES 
+	
+	echo "vm.name=""$CURRENT_VM_NAME" >> $WORKER_PROPERTIES
+	echo $CURRENT_VM_NAME >> /etc/ourgrid/vmnames.conf
+
+	#IDLENESS DETECTOR
+	if echo $IDLENESS_DETECTOR | egrep -q Yes 
+	then
+		echo "worker.idlenessdetector=yes" >> $WORKER_PROPERTIES
+		echo "worker.idlenesstime="$IDLENESS_TIME >> $WORKER_PROPERTIES
+	fi
+	
+	#create brokers storage folder
+	STORAGE_FOLDER="/etc/ourgrid/worker-vserver"$WORKER_NUM"/.brokerstorage"
+	echo "worker.storagedir=""$STORAGE_FOLDER" >> $WORKER_PROPERTIES
+	mkdir -p $STORAGE_FOLDER
+	chmod -R 777 $STORAGE_FOLDER
+}
+
+function config_Install_Place() {
+
+	if [ ! -d $VM_IMAGES_DIR ] ; then
+		echo "Creating directory $VM_IMAGES_DIR..."
+		mkdir -p $VM_IMAGES_DIR
+	fi
+}
+
+function download_Vserver_image() {
+	#Download VSERVER_IMAGE
+    echo
+    echo "================================================="
+    echo "  Downloading OurGrid Worker VServer image ..."
+    echo "================================================="
+
+	wget -nc -P $VM_IMAGES_DIR http://maven.ourgrid.org/repos/linux/vserver/linux-vserver/20110509/linux-vserver-20110509.tar.bz2
+}
+
+function mount_base_vm() {
+	ourvirt -m create -h vserver -vm vm-clonebase -Ddiskimagepath=$VM_IMAGES_DIR/$IMAGE_FILE -Dos=linux -Dosversion=ubuntu
+}
+
+function clone_vm() {
+	ourvirt -m clone -h vserver -source vm-clonebase -target $CURRENT_VM_NAME
+}
+
+
+config_Install_Place
+download_Vserver_image
+
+/bin/bash copyworkers-vserver "$NUM_WORKERS" "$USERNAME" "$SERVERNAME" "$PASSWORD" "$PEERADDRESS" "$IMAGE_FILE"
+
+if [ $NUM_WORKERS -ge 2 ]; then
+	echo
+	echo "==========================="
+	echo "  Mounting Virtual Machine ..."
+	echo "==========================="
+	
+	mount_base_vm
+fi
+
+if [ -e /etc/ourgrid/vmnames.conf ] ; then
+	deleteWorkerVMs /etc/ourgrid/vmnames.conf vserver
+	rm -f /etc/ourgrid/vmnames.conf
+fi
+
+for WORKER_NUM in $(seq 1 $NUM_WORKERS)
+do	
+	echo
+	echo "==========================="
+    echo "  Configuring Worker $WORKER_NUM  "
+	echo "==========================="
+
+	WORKER_BASE="/etc/ourgrid/worker-vserver"$WORKER_NUM
+
+	WORKER_PROPERTIES=$WORKER_BASE"/worker.properties"
+
+	CURRENT_VM_NAME=${VM_NAME}_${WORKER_NUM}
+	
+	if [ $NUM_WORKERS -ge 2 ]; then
+		clone_vm
+		chown -R ourgrid /etc/vservers/$CURRENT_VM_NAME
+	fi
+
+	configure_worker_properties
+done
+
+prepare_environment
+
+su - -c "chkconfig --level 2345 worker-start on"
+su - -c "chkconfig --level 016 worker-stop on"
+
+chmod +x /etc/init.d/worker-start
+chmod +x /etc/init.d/worker-stop
+
+
+su - -c "echo 'ourgrid         ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers"
+su - -c "echo 'Defaults:ourgrid !requiretty' >> /etc/sudoers"
+
+chown ourgrid /usr/bin/worker
+chown ourgrid /etc/ourgrid/bin/worker-core
+chown ourgrid /usr/bin/testjvm
+chown -R ourgrid /usr/share/ourgrid
+chown -R ourgrid /etc/ourgrid
+
+rm -f /usr/bin/copyworkers-vserver

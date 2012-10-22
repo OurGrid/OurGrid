@@ -1,0 +1,11 @@
+JOB :  
+	label : testing
+	REQUIREMENTS : NOT ( ( OS = Linux AND PLAYPEN_SIZE >= 200 ) or ( 0s = Windows ) )
+	remote : echo "bla ble bli blo blu"
+	
+TASK :
+TASK :
+TASK :
+TASK :
+TASK :
+

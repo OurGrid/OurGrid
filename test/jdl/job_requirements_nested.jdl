@@ -1,0 +1,11 @@
+[
+	Name = "Diff Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = { "file1.txt", "file2.txt" };
+	Executable = "diff";
+	Arguments = "file1.txt file2.txt";
+	Requirements = member("java", other.glueHostApplicationSoftwareRuntimeEnvironment) || 
+					member("java", other.ApplicationEnvironment.Name);
+	Rank = 0; 
+]

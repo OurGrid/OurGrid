@@ -1,0 +1,26 @@
+<trusts>
+    <trust>
+    	<name>subA</name>
+      	<priority>1</priority>
+        <peer> 
+        	<name>peer11</name>
+            <publickey>publicKey11</publickey>
+        </peer>
+    </trust>
+    <trust>
+    	<name>subB</name>
+    	<priority>2</priority>
+    	<peer>
+    		<publickey>publicKey21</publickey> 
+    		<name>peer21</name>
+    	</peer> 
+    </trust>
+    <trust>
+       	<name>subC</name>
+    	<priority>2</priority>
+    	<peer>
+    		<publickey>publicKey22</publickey> 
+    		<name>peer22</name>
+    	</peer>
+    </trust>
+</trusts>

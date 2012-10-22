@@ -1,0 +1,16 @@
+MYGUMP : 
+        type : UALinux
+        OS : linux
+        port : 2099
+
+        GUM :
+                name : localhost
+                debug : yes
+                playpenRoot : /tmp/
+                storageDir : .mgstorage
+                security : no
+                copyTo : scp $localfile $machine:$remotefile
+                copyFrom : scp $machine:$remotefile $localfile
+                remExec : ssh $machine $command
+
+

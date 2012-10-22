@@ -1,0 +1,9 @@
+PEER : 
+	LABEL : "UF RJ"
+	username : ourgrid-peer 
+	servername : jabber.org
+
+PEER :
+	label : LCC
+	username : peer-lcc
+	servername : jabber.org

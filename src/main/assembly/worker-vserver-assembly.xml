@@ -1,0 +1,40 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>worker-linux-vserver</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <baseDirectory>worker-vserver</baseDirectory>
+  
+  <files>
+    
+    <file><source>target/linux-vserver-20110509.tar.bz2</source></file>
+    <file><source>target/ourgrid-${project.version}-worker.zip</source></file>
+    
+    <file><source>${vserver-scripts}/vserver.functions</source></file>
+    <file><source>${vserver-scripts}/configuring_environment.sh</source></file>
+    <file><source>${vserver-scripts}/readFile</source></file>
+    <file><source>${vserver-scripts}/remove-workervm</source></file>
+    <file><source>${vserver-scripts}/readWorkerProperties.py</source></file>
+    <file><source>${vserver-scripts}/deletePreviousVMs.py</source></file>
+    <file><source>deployer/worker/vserver/README</source></file>
+    
+    <file>
+    	<source>${vserver-scripts}/build-og-vserver.sh</source>
+    	<filtered>true</filtered>
+    </file>
+  
+  </files>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>worker-scripts</outputDirectory>
+  		<directory>${vserver-scripts}/bin</directory>
+  		<includes>
+  			<include>**</include>
+  		</includes>
+  	</fileSet>
+  </fileSets>
+  
+</assembly>

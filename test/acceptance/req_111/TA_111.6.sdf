@@ -1,0 +1,8 @@
+workerdefaults:
+    servername: xmpp.ourgrid.org
+
+worker:
+    username: worker1
+    mem: 512
+    OS: linux
+    environment: brams

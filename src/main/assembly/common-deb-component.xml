@@ -1,0 +1,35 @@
+<component>
+  
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>/usr/lib/ourgrid</outputDirectory>
+      <scope>runtime</scope>
+    </dependencySet>
+  </dependencySets>
+  
+  <fileSets>
+  
+  	<fileSet>
+  		<outputDirectory>/usr/bin</outputDirectory>
+  		<directory>deployer/deb/common</directory>
+  		<includes>
+  			<include>testjvm</include>
+  		</includes>
+  		<fileMode>755</fileMode> 
+  	</fileSet>
+  	
+  	<fileSet>
+  		<outputDirectory>/var/log/ourgrid</outputDirectory>
+  		<directory>logs</directory>
+  		<excludes>
+  			<exclude>*</exclude>
+  		</excludes>
+  	</fileSet>
+  	<fileSet>
+  		<outputDirectory>/etc/ourgrid/examples</outputDirectory>
+  		<directory>examples</directory>
+  	</fileSet>
+  	
+  </fileSets>
+  
+</component>

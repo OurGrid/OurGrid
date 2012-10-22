@@ -1,0 +1,3 @@
+# Defaults for Ourgrid DS - sourced by /etc/init.d/ds
+# Start DS on boot?
+START=yes

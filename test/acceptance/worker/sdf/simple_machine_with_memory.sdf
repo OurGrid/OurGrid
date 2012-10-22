@@ -1,0 +1,23 @@
+[
+	ServerName = "localhost";
+	OS="linux";
+
+	workers={w1, w2, w3, w4};
+
+	w1=[
+		UserName = "username";
+		GlueHostMainMemoryRamSize = 256;
+	];
+	w2=[
+		UserName = "username2";
+		GlueHostMainMemoryRamSize = 256;
+	];
+	w3=[
+		UserName = "username3";
+		GlueHostMainMemoryRamSize = 256;
+	];
+	w4=[
+		UserName = "username4";
+		GlueHostMainMemoryRamSize = 256;
+	];
+]

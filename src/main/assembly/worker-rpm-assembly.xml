@@ -1,0 +1,61 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>worker-deb</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  
+  <files>
+    <file>
+    	<source>deployer/deb/worker/worker-core</source>
+    	<outputDirectory>/etc/ourgrid/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/worker/worker</source>
+    	<outputDirectory>/usr/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+	<file>
+    	<source>deployer/deb/worker/control/copyworkers</source>
+    	<outputDirectory>/usr/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/worker/log4j.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/worker1</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/worker/worker.properties</source>
+    	<outputDirectory>/etc/ourgrid/worker1</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/worker/default/worker</source>
+    	<outputDirectory>/etc/default</outputDirectory>
+    </file>
+<!--     <file> -->
+<!--     	<source>deployer/deb/worker/init.d/worker</source> -->
+<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
+<!--     </file> -->
+     <file>
+    	<source>deployer/rpm/worker/init.d/worker-start</source>
+    	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+     <file>
+    	<source>deployer/rpm/worker/init.d/worker-stop</source>
+    	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+  </files>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>/usr/share/ourgrid</outputDirectory>
+  		<directory>deployer/deb/worker/share</directory>
+  		<excludes>
+  			<exclude>*</exclude>
+  		</excludes>
+  	</fileSet>
+  </fileSets>
+</assembly>

@@ -1,0 +1,11 @@
+[
+workers={w1};
+w1=[
+
+servername="testserver";
+username="testuser";
+OS="linux";
+mainMemory=1024;
+ 
+ ];
+ ]

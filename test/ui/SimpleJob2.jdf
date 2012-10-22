@@ -1,0 +1,19 @@
+job : 
+label 	: SimpleJob2
+
+task :
+init 	: put Fat.class Fat.class
+remote 	: nice java -cp . Fat 3 261147332 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK
+
+task :
+init   	: put Fat.class Fat.class
+remote 	: nice java -cp . Fat 261147332 522294661 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK
+
+
+task :
+init  	: put Fat.class Fat.class
+remote 	: nice java -cp . Fat 522294661 783441990 6819792792357414911 output-$JOB.$TASK
+final   : get output-$JOB.$TASK output-$JOB.$TASK
+

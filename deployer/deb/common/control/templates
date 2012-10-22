@@ -1,0 +1,3 @@
+Template: ${package.name}/user_password
+Type: string
+Description: An user must be added to manage the OurGrid components, the user login is 'ourgrid', inform a password for this user:

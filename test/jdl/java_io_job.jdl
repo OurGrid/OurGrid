@@ -1,0 +1,14 @@
+[
+	Name = "Java IO Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = { "../acceptance/broker/Class.class" };
+	OutputSandbox = { "remoteFile1.txt", "remoteFile2.txt" };
+	Executable = "java";
+	Arguments = "Class";
+	StdOutput = "remoteFile1.txt";
+	StdError = "remoteFile2.txt";
+	Epilogue = "echo";
+	Requirements = other.GlueHostMainMemoryRAMSize == 256 || other.ExecutionEnvironmentMainMemorySize == 256;
+	Rank = 0; 
+]

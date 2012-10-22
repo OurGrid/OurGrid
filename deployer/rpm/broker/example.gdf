@@ -1,0 +1,6 @@
+# Grid Description File Example
+
+peer:
+	label: LSD Peer
+	username : peer-lsd
+	servername : xmpp.ourgrid.org

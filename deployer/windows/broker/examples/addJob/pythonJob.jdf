@@ -1,0 +1,6 @@
+job :
+label : PythonJob
+
+task :
+init :
+remote : python -V

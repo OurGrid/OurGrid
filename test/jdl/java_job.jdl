@@ -1,0 +1,10 @@
+[
+	Name = "Java Job";
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = {"../acceptance/broker/Class.class"};
+	Executable = "java";
+	Arguments = "Class";
+	Requirements = other.GlueHostMainMemoryRAMSize == 256 || other.ExecutionEnvironmentMainMemorySize == 256;
+	Rank = 0;
+]

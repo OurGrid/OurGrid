@@ -1,0 +1,36 @@
+<domain type='vbox'>
+  <name>vbox-shared</name>
+  <uuid>4dab22b31d52d8f32516782e98ab3fa0</uuid>
+
+  <os>
+    <type>hvm</type>
+    <boot dev='hd'/>
+  </os>
+
+  <memory>1048576</memory>
+  <vcpu>1</vcpu>
+
+  <features>
+    <pae/>
+    <acpi/>
+    <apic/>
+  </features>
+
+  <devices>
+
+    <disk type='file' device='disk'>
+       <source file='/local/tarciso/vbox-shared.vdi'/>
+       <target dev='hd' />
+    </disk>
+
+    <sound model='sb16'/>
+
+  </devices>
+
+  <filter name='no-ip-spoofing' chain='ipv4'>
+    <rule action='drop' direction='out'>
+      <ip match='no' srcipaddr='$IP' />
+    </rule>
+  </filter>
+
+</domain>

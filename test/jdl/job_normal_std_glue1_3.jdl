@@ -1,0 +1,14 @@
+[
+	Name = "Normal Job";
+	Type = "Job";
+	JobType = "normal";
+	Executable = "run.sh";
+	InputSandbox = {"input"};
+	OutputSandbox = { "output", "err" };
+	StdInput = "input";
+	StdOutput = "output";
+	StdError = "err";
+	VirtualOrganisation = "ourgrid";
+	Requirements = other.GlueHostOperatingSystemRelease == "LINUX" && Member("R",other.GlueHostApplicationSoftwareRunTimeEnvironment);
+	Rank = 10;
+]

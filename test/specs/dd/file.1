@@ -1,0 +1,24 @@
+MYGUMP :
+	type : GridScript
+	OS : linux
+	remExec : ssh -x $machine $command
+	copyFrom : scp $machine:$remotefile $localfile
+	copyTo : scp $localfile $machine:$remotefile
+	
+	GUM : 
+		name : roncador.lsd.ufcg.edu.br
+	
+	GUM : 
+		name : paru.lsd.ufcg.edu.br
+	
+	GUM : 
+		name : mussum.lsd.ufcg.edu.br
+		
+	GUM : 
+		name : palmito.lsd.ufcg.edu.br
+
+	GUM : 
+		name : parati.lsd.ufcg.edu.br
+		
+	GUM : 
+		name : piaba.lsd.ufcg.edu.br		

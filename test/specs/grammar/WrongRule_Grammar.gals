@@ -1,0 +1,37 @@
+#Options
+GenerateScanner = true
+GenerateParser = true
+Language = Java
+ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
+ScannerCaseSensitive = true
+ScannerTable = Full
+Input = Stream
+Parser = LL
+#RegularDefinitions
+
+#Tokens
+GRID
+MYGUMP
+GUM
+GUMP
+string
+":"
+"\n"
+#NonTerminals
+<grid>
+<my_gump>
+<gum_def>
+<gum_attributes>
+<gump_refs>
+<gump_attributes>
+<value>
+#Grammar
+GRID ::= <gump_refs> <my_gump> #12 ;
+<my_gump> ::= MYGUMP ":" #9 <gum_attributes> #10 <gum_def> ;
+<gum_def> ::= GUM ":" #6 <gum_attributes> #8 <gum_def> | #11 î ;
+<gum_attributes> ::= #3 string #1 ":" <value> "\n" #4 <gum_attributes> | î ;
+<gump_refs> ::= GUMP ":" <gump_attributes> #5 <gump_refs> | î ;
+<gump_attributes> ::= #3 string #1 ":" <value> "\n" #7 <gump_attributes> | #13 î ;
+<value> ::= #2 string ;

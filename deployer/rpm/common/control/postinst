@@ -1,0 +1,15 @@
+#!/bin/bash
+# Source debconf library.
+
+echo "Creating user \"ourgrid\"."
+
+PASSWORD="ourgrid"
+
+pass=$(perl -e 'print crypt($ARGV[0], "password")' $PASSWORD)
+su - -c "useradd -m -s /bin/bash -p $pass ourgrid"
+[ $? -eq 0 ] && echo "ourgrid user has been added to system!"
+	
+check="ourgrid		ALL=(ALL) NOPASSWD:ALL"; [[ -n $(grep "$check" /etc/sudoers ) ]] && echo "Permission Already Exists" || echo "$check" >> /etc/sudoers
+
+[[ -d /var/log/ourgrid ]] && chown ourgrid /var/log/ourgrid
+chown -R ourgrid /usr/bin/testjvm

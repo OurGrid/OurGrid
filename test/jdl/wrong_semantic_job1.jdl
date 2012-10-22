@@ -1,0 +1,12 @@
+[
+	Name = {"Wrong Job"}; 
+	Type = "Job";
+	JobType = "normal";
+	InputSandbox = { "Class.class" };
+	OutputSandbox = { "remoteFile1.txt" };
+	Executable = "java";
+	Arguments = "Class ";
+	StdOutput = "remoteFile1.txt";
+	Requirements = other.GlueHostMainMemoryRAMSize == 256 || other.ExecutionEnvironmentMainMemorySize == 256;
+	Rank = 0;
+]

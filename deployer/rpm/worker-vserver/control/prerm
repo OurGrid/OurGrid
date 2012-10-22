@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+worker stop > /dev/null 2>&1 || true
+
+if [ "$1" = "remove" ]; then
+	if [ -e /etc/ourgrid/vmnames.conf ] ; then
+		deleteWorkerVMs /etc/ourgrid/vmnames.conf vserver
+		rm -f /etc/ourgrid/vmnames.conf
+	fi
+fi
+
+exit 0

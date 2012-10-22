@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment/>
+
+<entry key="storageDir">C:\tmp</entry>
+<entry key="from">ourgridportal@ourgrid.org</entry>
+<entry key="from.name">OurGrid.org</entry>
+<entry key="hostName">japones.lsd.ufcg.edu.br</entry>
+<entry key="username">ourgridportal</entry>
+<entry key="password"></entry>
+
+<entry key="admin.login">gustavo</entry>
+<entry key="admin.password">gus</entry>
+<entry key="admin.email">gugajansen@gmail.com</entry>
+
+<entry key="default.storage.size">5</entry>
+
+<entry key="log.file.name">./logs/OurGridPortal.log</entry>
+
+<entry key="genecodis.path">./war/resources/plugin/genecode_yang_32_static</entry>
+
+<entry key="rho.path">/home/tellesmvn/apache-tomcat-6.0.26/webapps/ourgridportal/resources/plugin/rho/rho</entry>
+
+<entry key="reservoir.path">./war/resources/plugin/reservatorios/jhidro.jar</entry>
+
+<entry key="cisterns.path">./war/resources/plugin/cisternas</entry>
+
+<entry key="marbs.path">./war/resources/plugin/marbs</entry>
+
+<entry key="epanet.path">./war/resources/plugin/epanet</entry>
+
+<entry key="build.test">false</entry>
+
+</properties>

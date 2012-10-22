@@ -1,0 +1,15 @@
+#! /bin/sh
+
+# chkconfig: 2345 95 20
+# description: Starts ourgrid-aggregator
+# processname: aggregator-start
+
+### BEGIN INIT INFO
+# Provides:          aggregator
+# Required-Start:    $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Short-Description: Starts the aggregator module of OurGrid(ourgrid.org)
+### END INIT INFO
+
+#sudo -u ourgrid /usr/bin/aggregator start
+su ourgrid -c "aggregator start" &> /dev/null

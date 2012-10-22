@@ -1,0 +1,24 @@
+[
+servername="testserver";
+OS="linux";
+software=java;
+java=[
+	name="Java";
+	version="1.6";
+];
+
+names={"name1", "names2"};
+
+workers={w1, w2};
+
+w1=[
+	username="testuserB";
+ 	mainMemory=128;
+];
+
+w2=[
+	username="testuserC";
+	preemptionEnabled=true;     
+	OS="windows";
+];
+]

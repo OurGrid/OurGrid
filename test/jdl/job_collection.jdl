@@ -1,0 +1,46 @@
+[
+	Name = "Collection Job";
+	Type = "collection";
+	VirtualOrganisation = "EGEE";
+
+	AllowZippedISB="false";
+	ExpiryTime = 1256667316539;
+
+	InputSandbox = {
+		"/tmp/foo",
+		"/home/gliteuser/bar",
+		"gsiftp://neo.datamat.it:5678/tmp/cms_sim.exe ",
+		"file:///tmp/myconf"
+	};
+	InputSandboxBaseURI = "gsiftp://matrix.datamat.it:5432/tmp";
+	DefaultNodeRetryCount=0;
+	DefaultNodeShallowRetryCount=0;
+	
+	
+	Rank = other.GlueHostEstimatedTraversalTime;
+	Requirements = other.GlueCEStateStatus == "Production";
+	nodes = {[
+			JobType = "Normal";
+			Executable = "a.exe";
+			InputSandbox = {
+				"/home/data/myfile.txt"
+			};
+		],[
+			JobType = "Normal";
+			Executable = "b.exe";
+			Arguments = "1 2 3";
+			RetryCount = 3;
+			Requirements =
+			other.GlueCEInfoTotalCPUs > 2;
+			Rank = other.GlueCEStateFreeCPUs;
+			OutputSandbox = {"myoutput.txt",
+			"myerror.txt" };
+			OutputSandboxBaseDestURI =
+			"gsiftp://neo.datamat.it:5432/tmp";
+		],[
+			file = "test/jdl/job_normal_std_glue1_3.jdl";
+		],[
+			file = "test/jdl/job_normal_glue2.jdl";
+		]
+	};
+]

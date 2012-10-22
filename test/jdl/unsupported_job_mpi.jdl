@@ -1,0 +1,28 @@
+[
+	Name = "MPICH Job";
+	Type = "job";
+	JobType = "mpich";
+	VirtualOrganisation = "ourgrid";
+
+	NodeNumber = 6;
+	Executable = "cpi";
+	StdOutput = "sim.out";
+	StdError = "sim.err";
+	
+	OutputSandbox = {
+		"sim.err",
+		"sim.out"
+	};
+	
+	OutputSandboxDestURI = "gsiftp://lxplus.cern.ch:3344/home/egtes";
+
+	MyProxyServer = "skurut.cesnet.cz";
+	RetryCount = 3;
+
+	InputSandbox = {
+		"file:///home/fpacini/JDL2.0/cpi"
+	};
+
+	requirements = other.GlueHostNetworkAdapterOutboundIP && Member("IDL2.0",other.GlueHostApplicationSoftwareRunTimeEnvironment);
+	rank = other.GlueCEStateFreeCPUs;
+]

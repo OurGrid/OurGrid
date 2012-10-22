@@ -1,0 +1,22 @@
+[
+	servername="xmpp.ourgrid.org";
+	workers={w1,w2};
+	w1=[
+		username="worker1";
+		mainMemory=512;
+		OS="linux";
+		software={brams};
+		brams=[
+			name = "brams";
+		];
+	];
+	w2=[
+		username="worker2";
+		mainMemory=512;
+		OS="linux";
+		software={brams};
+		brams=[
+			name = "brams";
+		];
+	];
+]

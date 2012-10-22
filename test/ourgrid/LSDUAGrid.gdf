@@ -1,0 +1,102 @@
+MYGUMP :
+
+type : UALinux
+OS : linux
+remExec : ssh -x $machine $command
+copyFrom : scp $machine:$remotefile $localfile
+copyTo : scp $localfile $machine:$remotefile
+port : 8568
+                                        
+GUM :
+name : bagre.lsd.ufcg.edu.br
+
+GUM :
+name : traira.lsd.ufcg.edu.br
+
+GUM :
+name : palhaco.lsd.ufcg.edu.br
+
+GUM : 
+name : palmito.lsd.ufcg.edu.br
+
+GUM : 
+name : roncador.lsd.ufcg.edu.br
+
+GUM : 
+name : wahoo.lsd.ufcg.edu.br
+
+GUM : 
+name : bicuda.lsd.ufcg.edu.br
+
+GUM : 
+name : vermelho.lsd.ufcg.edu.br
+
+GUM : 
+name : bonito.lsd.ufcg.edu.br
+
+GUM : 
+name : pirapema.lsd.ufcg.edu.br
+
+GUM : 
+name : piava.lsd.ufcg.edu.br
+
+GUM : 
+name : tarpon.lsd.ufcg.edu.br
+
+GUM : 
+name : salmao.lsd.ufcg.edu.br
+
+GUM : 
+name : juliana.lsd.ufcg.edu.br
+
+GUM : 
+name : nemo.lsd.ufcg.edu.br
+
+GUM : 
+name : surubim.lsd.ufcg.edu.br
+
+GUM :
+name : cascudo.lsd.ufcg.edu.br
+
+GUM :
+name : dourado.lsd.ufcg.edu.br
+
+GUM :
+name : carpa.lsd.ufcg.edu.br
+
+GUM :
+name : joaninha.lsd.ufcg.edu.br
+
+GUM :
+name : tuvira.lsd.ufcg.edu.br
+
+GUM :
+name : bagre.lsd.ufcg.edu.br
+
+GUM :
+name : mussum.lsd.ufcg.edu.br
+
+GUM :
+name : lambari.lsd.ufcg.edu.br
+
+GUM :
+name : beta.lsd.ufcg.edu.br
+
+GUM :
+name : ourico.lsd.ufcg.edu.br
+
+GUM : 
+name : namorado.lsd.ufcg.edu.br
+
+GUM :
+name : enchova.lsd.ufcg.edu.br
+
+GUM :
+name : piaba.lsd.ufcg.edu.br
+
+GUM :
+name : violinha.lsd.ufcg.edu.br
+
+GUM :
+name : parati.lsd.ufcg.edu.br
+

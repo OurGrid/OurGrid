@@ -1,0 +1,47 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+  <id>peer-deb</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  
+  <files>
+    <file>
+    	<source>deployer/deb/peer/peer</source>
+    	<outputDirectory>/usr/bin</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/peer/log4j.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/peer</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/peer/peer-hibernate.cfg.xml</source>
+    	<outputDirectory>/etc/ourgrid/peer</outputDirectory>
+    </file>
+    <file>
+    	<source>deployer/deb/peer/peer.properties</source>
+    	<outputDirectory>/etc/ourgrid/peer</outputDirectory>
+    	<fileMode>755</fileMode>
+    </file>
+    <file>
+    	<source>deployer/deb/peer/default/peer</source>
+    	<outputDirectory>/etc/default</outputDirectory>
+    </file>
+    <file>
+     	<source>deployer/deb/peer/init.d/peer</source>
+     	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+  </files>
+  
+  <fileSets>
+  	<fileSet>
+  		<outputDirectory>/usr/share/ourgrid</outputDirectory>
+  		<directory>deployer/deb/peer/share</directory>
+  		<excludes>
+  			<exclude>*</exclude>
+  		</excludes>
+  	</fileSet>
+  </fileSets>
+</assembly>

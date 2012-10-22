@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+rm -r /etc/ourgrid/worker*
+rm -rf /var/log/ourgrid/worker*.log*
+
+
+exit 0

@@ -1,0 +1,3 @@
+# Defaults for Ourgrid Worker - sourced by /etc/init.d/worker-vbox
+# Start worker-box on boot?
+START=yes

@@ -1,0 +1,13 @@
+Package: ${package.name}
+Version: ${application.deb.version}
+Architecture: all
+Section: main
+Priority: optional
+Size: 20
+Depends: default-jre (>=1.6) | java6-runtime, ourgrid-common, debconf (>=0.5), virtualbox, virtualbox-ose-guest-utils
+Maintainer: OurGrid Dev Team <ourgrid-dev-ml@ourgrid.org>
+Homepage: ourgrid.org
+Description: OurGrid is a free-to-join peer-to-peer computing grid that has been in production since December 2004. 
+ The software is written in Java, allowing any resource capable of running a Java Virtual Machine to be tapped on to the grid.
+ .
+ The Worker is the OurGrid component which receives and executes remote tasks submited by the grid users.

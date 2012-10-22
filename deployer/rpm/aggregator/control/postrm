@@ -1,0 +1,4 @@
+#!/bin/sh
+
+rm -rf /var/log/ourgrid/aggregator*.log*
+exit 0
