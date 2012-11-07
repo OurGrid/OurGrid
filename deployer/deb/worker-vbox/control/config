@@ -1,10 +1,50 @@
-#!/bin/sh -e
+#!/bin/bash
 # Source debconf library.
 . /usr/share/debconf/confmodule
 
-recommended=$(grep -c processor /proc/cpuinfo)
+min() {
+  if [ "$1" -gt "$2" ]; then
+    echo "$2"
+  else
+    echo "$1"
+  fi
+}
 
-db_subst ${package.name}/num_workers cpus $recommended
+memory() {
+  TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+  SO_MEM=`expr 512 \* 1024`
+  ALLOCABLE_MEM=`expr $TOTAL_MEM - $SO_MEM`
+  VM_MEM=`expr 256 \* 1024`
+  NUM_WORKERS_BY_MEM=`expr $ALLOCABLE_MEM / $VM_MEM`
+  echo $NUM_WORKERS_BY_MEM
+}
+
+space_available() {
+  DEVICE=`df -P /etc | tail -1 | cut -d' ' -f 1`
+  SPACE_AVAILABLE=`df -B 1073741824 | grep -w $DEVICE | awk '{print $4}'`
+  NUM_WORKERS_BY_SPACE=`expr $SPACE_AVAILABLE / 10`
+  echo $NUM_WORKERS_BY_SPACE
+}
+
+number_of_cores() {
+  NUM_OF_PROCESSORS=`grep -c processor /proc/cpuinfo`
+  echo $NUM_OF_PROCESSORS
+}
+
+# Get space available
+NUMBER_OF_WORKERS_BY_SPACE=$(space_available)
+
+# Get number of processors
+NUMBER_OF_PROCESSORS=$(number_of_cores)
+
+# Get number of workers by memory
+NUM_OF_WORKERS_BY_MEM=$(memory)
+
+# Recommend a number of workers
+MIN_TEMP=$(min $NUMBER_OF_WORKERS_BY_SPACE $NUMBER_OF_PROCESSORS)
+RECOMMENDED=$(min $MIN_TEMP $NUM_OF_WORKERS_BY_MEM)
+
+db_subst ${package.name}/num_workers cpus $RECOMMENDED
 
 # How many workers do you want to install?
 db_input critical ${package.name}/num_workers || true

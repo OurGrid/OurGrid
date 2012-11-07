@@ -2,7 +2,21 @@
 # Source debconf library.
 . /usr/share/debconf/confmodule
 
-recommended=$(grep -c processor /proc/cpuinfo)
+
+memory() {
+  NUM_WORKERS="$1"
+  TOTAL_MEM=`grep MemTotal /proc/meminfo | awk '{print $2}'`
+  SO_MEM=`expr 512 \* 1024`
+  ALLOCABLE_MEM=$(echo "($TOTAL_MEM / 1024 * 0.65)" | bc -l)
+  ALLOCABLE_MEM_INT=$(echo $ALLOCABLE_MEM | sed -e "s/\(\.[0-9]\).*//g")
+  if [ $NUM_WORKERS -gt 1 ]; then
+    WORKER_MEM=$(echo "($ALLOCABLE_MEM * 1.35) / $NUM_WORKERS" | bc -l)
+    WORKER_MEM_INT=$(echo $WORKER_MEM | sed -e "s/\(\.[0-9]\).*//g")
+    echo $WORKER_MEM_INT
+  else
+    echo $ALLOCABLE_MEM_INT
+  fi
+}
 
 db_get ${package.name}/num_workers
 if  echo "$RET" | egrep -q '^[0-9]+$'; then
@@ -79,6 +93,8 @@ if [ -e /etc/ourgrid/vmnames.conf ] ; then
 	rm -f /etc/ourgrid/vmnames.conf
 fi
 
+TOTAL_MEM=$(memory $NUM_WORKERS)
+
 for WORKER_NUM in $(seq 1 $NUM_WORKERS)
 do
 	echo
@@ -95,7 +111,7 @@ do
 	echo "vm.hypervisor.type=VBOX" >> $WORKER_PROPERTIES
 	echo "vm.disk.type=sata" >> $WORKER_PROPERTIES
 	echo "vm.os=linux" >> $WORKER_PROPERTIES
-	echo "vm.memory=128" >> $WORKER_PROPERTIES
+	echo "vm.memory=$TOTAL_MEM" >> $WORKER_PROPERTIES
 	echo "vm.password=worker" >> $WORKER_PROPERTIES
 	echo "vm.user=worker" >> $WORKER_PROPERTIES
 	echo "vm.start.timeout=120" >> $WORKER_PROPERTIES
