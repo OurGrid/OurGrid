@@ -41,6 +41,8 @@ update-rc.d worker defaults
 chown ourgrid /usr/bin/worker
 chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
+touch /etc/ourgrid/idleness
+chmod 777 /etc/ourgrid/idleness
 
 rm -f /usr/bin/copyworkers
 

@@ -42,9 +42,7 @@ public class WorkerConfiguration extends Configuration {
 	
 	public static final String PROP_SPEC_FILENAME = PREFIX + "spec.file";
 	
-	public static final String PROP_XIDLETIME64_PATH = PREFIX + "xidletime64.path";
-	
-	public static final String PROP_XIDLETIME32_PATH = PREFIX + "xidletime32.path";
+	public static final String PROP_XSESSION_IDLENESS_FILE = PREFIX + "xidletime.path";
 	
 	public static final String PROP_LOG_PROPERTIES_FILE = PREFIX + "log.properties";
 
@@ -100,11 +98,8 @@ public class WorkerConfiguration extends Configuration {
 	 * worker.properties default values.
 	 */
 	
-	static final String DEF_PROP_XIDLETIME64_PATH = "lib" +
-			separator + "libxidletime-1.0_amd64.so";
-	
-	static final String DEF_PROP_XIDLETIME32_PATH = "lib" +
-			separator + "libxidletime-1.0_i386.so";
+	static final String DEF_PROP_XSESSION_IDLENESS_FILE = separator + 
+			"etc" + separator + "ourgrid" + separator + "idleness";
 	
 	static final String DEF_PROP_SPEC_FILENAME = "worker.spec.properties";
 
@@ -149,8 +144,7 @@ public class WorkerConfiguration extends Configuration {
 	public WorkerConfiguration() {
 
     	setProperty( PROP_SPEC_FILENAME, DEF_PROP_SPEC_FILENAME );
-    	setProperty( PROP_XIDLETIME64_PATH, DEF_PROP_XIDLETIME64_PATH );
-    	setProperty( PROP_XIDLETIME32_PATH, DEF_PROP_XIDLETIME32_PATH );
+    	setProperty( PROP_XSESSION_IDLENESS_FILE, DEF_PROP_XSESSION_IDLENESS_FILE );
 		setProperty( PROP_STORAGE_DIR, DEF_PROP_STORAGE_DIR );
 		setProperty( PROP_STORAGE_SIZE, DEF_PROP_STORAGE_SIZE );
 		setProperty( PROP_PLAYPEN_ROOT, DEF_PROP_PLAYPEN_ROOT );

@@ -39,6 +39,10 @@
      	<source>deployer/deb/worker/init.d/worker</source>
      	<outputDirectory>/etc/init.d</outputDirectory>
     </file>
+    <file>
+     	<source>deployer/deb/worker/X99ourgrid-worker-idleness</source>
+     	<outputDirectory>/etc/X11/Xsession.d</outputDirectory>
+    </file>
   </files>
   
   <fileSets>

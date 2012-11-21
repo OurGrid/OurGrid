@@ -32,7 +32,8 @@ public abstract class AbstractScheduledIdlenessDetectorActionRequester <U extend
 
 	protected boolean isIdle() {
 		
-		List<ScheduleTime> scheduleTimes = WorkerDAOFactory.getInstance().getIdlenessDetectorDAO().getScheduleTimes();
+		List<ScheduleTime> scheduleTimes = WorkerDAOFactory.getInstance().
+				getIdlenessDetectorDAO().getScheduleTimes();
 		
 		if (scheduleTimes.isEmpty()) return true;
 		

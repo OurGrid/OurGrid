@@ -31,21 +31,13 @@ import br.edu.ufcg.lsd.commune.container.servicemanager.actions.RepeatedAction;
 /**
  */
 public class LinuxIdlenessDetectorAction implements RepeatedAction {
-	
-	private static final String AMD64 = "amd64";
-	private static final String I386 = "i386";
-	
 
 	public void run(Serializable handler, ServiceManager serviceManager) {
 		LinuxIdlenessDetectorActionRequestTO to = new LinuxIdlenessDetectorActionRequestTO();
-		String osType= System.getProperty("os.arch");
-		
-		if (osType.equals(AMD64)) {
-			to.setXIdleTimeLibPath(serviceManager.getContainerContext().getProperty(WorkerConfiguration.PROP_XIDLETIME64_PATH));
-		} else if (osType.equals(I386)) {
-			to.setXIdleTimeLibPath(serviceManager.getContainerContext().getProperty(WorkerConfiguration.PROP_XIDLETIME32_PATH));
-		}
-		
+
+		to.setXIdleTimeLibPath(serviceManager.getContainerContext().
+				getProperty(WorkerConfiguration.PROP_XSESSION_IDLENESS_FILE));
+
 		OurGridRequestControl.getInstance().execute(to, serviceManager);
 	}
 }

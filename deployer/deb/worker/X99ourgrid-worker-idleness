@@ -1,0 +1,12 @@
+#!/bin/sh
+
+check_idle() {
+  while [ TRUE ]; do
+    CURRENT_DATE=$(date +%s)
+    IDLE_TIME=$(xprintidle)
+    echo "$CURRENT_DATE;$IDLE_TIME" > /etc/ourgrid/idleness
+    sleep 30
+  done
+}
+
+check_idle &

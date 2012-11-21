@@ -2,6 +2,7 @@
 
 rm -r /etc/ourgrid/worker*
 rm -rf /var/log/ourgrid/worker*.log*
+rm /etc/ourgrid/idleness
 
 
 exit 0

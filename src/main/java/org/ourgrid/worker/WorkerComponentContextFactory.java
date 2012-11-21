@@ -42,9 +42,8 @@ public class WorkerComponentContextFactory extends OurGridContextFactory {
 		
 		Map<Object, Object> properties = super.getDefaultProperties();
 		properties.put(ModuleProperties.PROP_CONFDIR, findConfDir());
-		
-		properties.put( WorkerConfiguration.PROP_XIDLETIME64_PATH, 
-				WorkerConfiguration.DEF_PROP_XIDLETIME64_PATH );
+		properties.put( WorkerConfiguration.PROP_XSESSION_IDLENESS_FILE, 
+				WorkerConfiguration.DEF_PROP_XSESSION_IDLENESS_FILE );
 		properties.put( WorkerConfiguration.PROP_STORAGE_DIR, 
 				WorkerConfiguration.DEF_PROP_STORAGE_DIR );
 		properties.put( WorkerConfiguration.PROP_PLAYPEN_ROOT, 

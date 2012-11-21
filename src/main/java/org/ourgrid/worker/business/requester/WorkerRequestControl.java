@@ -61,7 +61,7 @@ public class WorkerRequestControl extends OurGridRequestControl {
 		addRequester(WorkerRequestConstants.WORKER_CLIENT_IS_DOWN, new WorkerClientIsDownRequester());
 		addRequester(WorkerRequestConstants.WORKER_CLIENT_IS_UP, new WorkerClientIsUpRequester());
 		addRequester(WorkerRequestConstants.WORKER_SPEC_BASED_IDLENESS_DETECTOR_ACTION, new WorkerSpecBasedIdlenessDetectorActionRequester());
-		addRequester(WorkerRequestConstants.LINUX_IDLENESS_DETECTOR_ACTION, new LinuxIdlenessDetectorActionRequester());
+		addRequester(WorkerRequestConstants.LINUX_IDLENESS_DETECTOR_ACTION, new LinuxXSessionIdlenessDetectorActionRequester());
 		addRequester(WorkerRequestConstants.WIN_IDLENESS_DETECTOR_ACTION, new WinIdlenessDetectorActionRequester());
 		addRequester(WorkerRequestConstants.WORKER_LOGIN_SUCCEEDED, new WorkerLoginSucceededRequester());
 		addRequester(WorkerRequestConstants.REMOTE_WORKER_MANAGEMENT_CLIENT_DO_NOTIFY_FAILURE, new RemoteWorkerManagementClientDoNotifyFailureRequester());

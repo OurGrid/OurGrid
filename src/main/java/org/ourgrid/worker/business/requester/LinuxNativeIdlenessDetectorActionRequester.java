@@ -21,7 +21,7 @@ import org.ourgrid.worker.request.LinuxIdlenessDetectorActionRequestTO;
 import com.sun.jna.Library;
 import com.sun.jna.Native;
 
-public class LinuxIdlenessDetectorActionRequester extends AbstractScheduledIdlenessDetectorActionRequester<LinuxIdlenessDetectorActionRequestTO> {
+public class LinuxNativeIdlenessDetectorActionRequester extends AbstractScheduledIdlenessDetectorActionRequester<LinuxIdlenessDetectorActionRequestTO> {
 	
 	private LinkedList<String[ ]> currentStatus = new LinkedList<String[ ]>();
 
@@ -31,11 +31,11 @@ public class LinuxIdlenessDetectorActionRequester extends AbstractScheduledIdlen
 	public List<IResponseTO> execute(LinuxIdlenessDetectorActionRequestTO request) {
 		List<IResponseTO> responses = new ArrayList<IResponseTO>();
 		
-		if (isIdle(responses, request.getXIdleTimeLibPath())) {
-			IdlenessDetectorController.getInstance().resumeWorker(responses);
-		} else {
-			IdlenessDetectorController.getInstance().pauseWorker(responses);
-		}
+//		if (isIdle(responses, request.getXIdleTimeLibPath())) {
+//			IdlenessDetectorController.getInstance().resumeWorker(responses);
+//		} else {
+//			IdlenessDetectorController.getInstance().pauseWorker(responses);
+//		}
 		
 		return responses;
 	}
