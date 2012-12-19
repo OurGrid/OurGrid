@@ -38,11 +38,26 @@ fi
 chmod +x /etc/init.d/worker
 update-rc.d worker defaults
 
+CPU_ARCH=`uname -m`
+CPU_x86_64_ARCH=x86_64
+tar -xvf /etc/ourgrid/xprintidle.tar.gz -C /etc/ourgrid/
+if [ $CPU_ARCH == $CPU_X86_64_ARCH ]; then 
+	mv /etc/ourgrid/xprintidle-x86_64 /etc/ourgrid/bin/xprintidle
+	rm /etc/ourgrid/xprintidle-i386
+	rm /etc/ourgrid/xprintidle.tar.gz
+	else
+		mv /etc/ourgrid/xprintidle-i386 /etc/ourgrid/bin/xprintidle
+		rm /etc/ourgrid/xprintidle-x86_64
+		rm /etc/ourgrid/xprintidle.tar.gz
+fi
+
 chown ourgrid /usr/bin/worker
 chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
 touch /etc/ourgrid/idleness
 chmod 777 /etc/ourgrid/idleness
+chmod +x /etc/ourgrid/bin/xprintidle
+chmod +x /etc/X11/Xsession.d/X99ourgrid-worker-idleness
 
 rm -f /usr/bin/copyworkers
 
