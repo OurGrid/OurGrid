@@ -35,20 +35,28 @@
     	<source>deployer/deb/worker/default/worker</source>
     	<outputDirectory>/etc/default</outputDirectory>
     </file>
-<!--     <file> -->
-<!--     	<source>deployer/deb/worker/init.d/worker</source> -->
+    <file>
+    	<source>deployer/rpm/worker/init.d/worker</source>
+    	<outputDirectory>/etc/init.d</outputDirectory>
+    </file>
+<!--      <file> -->
+<!--     	<source>deployer/rpm/worker/init.d/worker-start</source> -->
 <!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
 <!--     </file> -->
-     <file>
-    	<source>deployer/rpm/worker/init.d/worker-start</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
+<!--      <file> -->
+<!--     	<source>deployer/rpm/worker/init.d/worker-stop</source> -->
+<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
+<!--     </file> -->
+    <file>
+     	<source>deployer/deb/worker/99ourgrid-worker-idleness</source>
+     	<outputDirectory>/etc/X11/Xsession.d</outputDirectory>
     </file>
-     <file>
-    	<source>deployer/rpm/worker/init.d/worker-stop</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
+	<file>
+     	<source>deployer/deb/worker/xprintidle.tar.gz</source>
+     	<outputDirectory>/etc/ourgrid</outputDirectory>
     </file>
   </files>
-  
+
   <fileSets>
   	<fileSet>
   		<outputDirectory>/usr/share/ourgrid</outputDirectory>

@@ -40,11 +40,14 @@
      	<outputDirectory>/etc/init.d</outputDirectory>
     </file>
     <file>
-     	<source>deployer/deb/worker/X99ourgrid-worker-idleness</source>
+     	<source>deployer/deb/worker/99ourgrid-worker-idleness</source>
      	<outputDirectory>/etc/X11/Xsession.d</outputDirectory>
     </file>
+    <file>
+     	<source>deployer/deb/worker/xprintidle.tar.gz</source>
+     	<outputDirectory>/etc/ourgrid</outputDirectory>
+    </file>
   </files>
-  
   <fileSets>
   	<fileSet>
   		<outputDirectory>/usr/share/ourgrid</outputDirectory>

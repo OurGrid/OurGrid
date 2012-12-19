@@ -41,7 +41,6 @@ import org.ourgrid.worker.business.controller.ExecutionController;
 import org.ourgrid.worker.business.dao.IdlenessDetectorDAO;
 import org.ourgrid.worker.business.dao.WorkerDAOFactory;
 import org.ourgrid.worker.business.messages.ControlMessages;
-import org.ourgrid.worker.communication.actions.GatherSystemInformationsAction;
 import org.ourgrid.worker.communication.actions.ReportWorkAccountingAction;
 import org.ourgrid.worker.communication.actions.ReportWorkerSpecAction;
 import org.ourgrid.worker.communication.actions.idlenessdetector.IdlenessDetectorActionFactory;
@@ -145,15 +144,7 @@ public class StartWorkerRequester implements RequesterIF<StartWorkerRequestTO> {
 		reportWorkerSpecTO.setActionName(WorkerConstants.REPORT_WORKER_SPEC_ACTION_NAME);
 		reportWorkerSpecTO.setRepeatedAction(new ReportWorkerSpecAction());
 		responses.add(reportWorkerSpecTO);
-
-		if (request.isPropertiesCollectorOn()) {
-			CreateRepeatedActionResponseTO gatherSystemInformationsTO = new CreateRepeatedActionResponseTO();
-			gatherSystemInformationsTO.setActionName(WorkerConstants.SYS_INFO_GATHERING_ACTION_NAME);
-			gatherSystemInformationsTO.setRepeatedAction(new GatherSystemInformationsAction());
-			responses.add(gatherSystemInformationsTO);
-		}
-		
-		
+			
 		if (request.isIdlenessDetectorOn() || request.useIdlenessSchedule()) {
 			createIdlenessDetectorAction(request, responses);
 		} 
