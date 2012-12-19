@@ -1,15 +1,33 @@
 #!/bin/bash -e
 # Source debconf library.
+. /usr/share/debconf/confmodule
 
 recommended=$(grep -c processor /proc/cpuinfo)
 
-NUM_WORKERS=$recommended
-USERNAME=$(hostname)
-SERVERNAME="xmpp.ourgrid.org"
-PASSWORD="xmpp-password"
-PEERADDRESS="peer-lsd@xmpp.ourgrid.org"
-IDLENESS_DETECTOR="yes"
-IDLENESS_TIME="1200"
+db_get ${package.name}/num_workers
+if  echo "$RET" | egrep -q '^[0-9]+$'; then
+	if [ "$RET" -ge 1 ]; then
+		echo
+	else
+		db_get ${package.name}/invalid_num_workers
+	fi
+else 
+	db_get ${package.name}/invalid_num_workers
+fi
+
+NUM_WORKERS="$RET"
+db_get ${package.name}/username
+USERNAME="$RET"
+db_get ${package.name}/servername
+SERVERNAME="$RET"
+db_get ${package.name}/password
+PASSWORD="$RET"
+db_get ${package.name}/peeraddress
+PEERADDRESS="$RET"
+db_get ${package.name}/idlenessdetector
+IDLENESS_DETECTOR="$RET"
+db_get ${package.name}/idlenesstime
+IDLENESS_TIME="$RET"
 
 /bin/bash copyworkers "$NUM_WORKERS" "$USERNAME" "$SERVERNAME" "$PASSWORD" "$PEERADDRESS" "$IDLENESS_DETECTOR" "$IDLENESS_TIME"
 
@@ -17,22 +35,21 @@ if [ -z "$(grep "xhost +si:localuser:ourgrid" /etc/profile)" ]; then
 	echo "xhost +si:localuser:ourgrid" >> /etc/profile
 fi	
 
+chmod +x /etc/init.d/worker
+update-rc.d worker defaults
+
 CPU_ARCH=`uname -m`
 CPU_x86_64_ARCH=x86_64
-tar -xvf /etc/ourgrid/xprintidle.tar.gz -C /etc/ourgrid/ 
+tar -xvf /etc/ourgrid/xprintidle.tar.gz -C /etc/ourgrid/
 if [ $CPU_ARCH == $CPU_X86_64_ARCH ]; then 
 	mv /etc/ourgrid/xprintidle-x86_64 /etc/ourgrid/bin/xprintidle
 	rm /etc/ourgrid/xprintidle-i386
 	rm /etc/ourgrid/xprintidle.tar.gz
-	else
-		mv /etc/ourgrid/xprintidle-i386 /etc/ourgrid/bin/xprintidle
-		rm /etc/ourgrid/xprintidle-x86_64
-		rm /etc/ourgrid/xprintidle.tar.gz
+else
+	mv /etc/ourgrid/xprintidle-i386 /etc/ourgrid/bin/xprintidle
+	rm /etc/ourgrid/xprintidle-x86_64
+	rm /etc/ourgrid/xprintidle.tar.gz
 fi
-
-chmod +x /etc/init.d/worker
-su - -c "chkconfig --level 2345 worker on"
-su - -c "chkconfig --level 016 worker on"
 
 chown ourgrid /usr/bin/worker
 chown ourgrid /usr/share/ourgrid
@@ -42,5 +59,6 @@ chmod 777 /etc/ourgrid/idleness
 chmod +x /etc/ourgrid/bin/xprintidle
 chmod +x /etc/X11/Xsession.d/99ourgrid-worker-idleness
 
-
 rm -f /usr/bin/copyworkers
+
+db_purge
