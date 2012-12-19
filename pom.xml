@@ -2011,32 +2011,32 @@
 			<version>2.5.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.ourgrid.amd64.xidletime</groupId>
-			<artifactId>libxidletime</artifactId>
-			<version>1.0_amd64</version>
-			<type>so</type>
-		</dependency>
-		<dependency>
-			<groupId>org.ourgrid.i386.xidletime</groupId>
-			<artifactId>libxidletime</artifactId>
-			<version>1.0_i386</version>
-			<type>so</type>
-		</dependency>
-		<dependency>
-			<groupId>org.hyperic.sigar</groupId>
-			<artifactId>libsigar-x86</artifactId>
-			<version>linux</version>
-			<type>so</type>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hyperic.sigar</groupId>
-			<artifactId>sigar-x86</artifactId>
-			<version>winnt</version>
-			<type>dll</type>
-			<scope>runtime</scope>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.ourgrid.amd64.xidletime</groupId> -->
+<!-- 			<artifactId>libxidletime</artifactId> -->
+<!-- 			<version>1.0_amd64</version> -->
+<!-- 			<type>so</type> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.ourgrid.i386.xidletime</groupId> -->
+<!-- 			<artifactId>libxidletime</artifactId> -->
+<!-- 			<version>1.0_i386</version> -->
+<!-- 			<type>so</type> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.hyperic.sigar</groupId> -->
+<!-- 			<artifactId>libsigar-x86</artifactId> -->
+<!-- 			<version>linux</version> -->
+<!-- 			<type>so</type> -->
+<!-- 			<scope>runtime</scope> -->
+<!-- 		</dependency> -->
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.hyperic.sigar</groupId> -->
+<!-- 			<artifactId>sigar-x86</artifactId> -->
+<!-- 			<version>winnt</version> -->
+<!-- 			<type>dll</type> -->
+<!-- 			<scope>runtime</scope> -->
+<!-- 		</dependency> -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-annotations</artifactId>
