@@ -1,0 +1,34 @@
+#!/bin/bash
+
+#bash example: download ourvirt jar and place this script within the same directory, then simply execute it
+#passing both arguments for the chosen hypervisor and vm_name that will be destroyed
+
+if [ $# -ne 3 ]; then
+	echo "Usage: <hypervisor> <ourvirt-user> <vm_name>"
+	exit 1
+fi
+
+HYPERVISOR=$1
+OURVIRT_USER=$2
+VM_NAME=$3
+SCRIPT_DIR="/usr/lib/ourgrid"
+
+su $OURVIRT_USER -c true
+if  [ $? -ne 0 ] ; then
+	echo "User $OURVIRT_USER does not exist, please create it or select another user." 
+	exit 1
+fi
+
+su $OURVIRT_USER -c "java -cp $SCRIPT_DIR/ourvirt-1.0.jar:$SCRIPT_DIR/commons-io-1.3.2.jar org/ourgrid/virt/Main -h $HYPERVISOR -vm $VM_NAME > /dev/null 2>&1" || true
+
+#remove VM configuration files
+su $OURVIRT_USER -c "rm -rf ~/.ourvirt/$VM_NAME"
+
+if [ $HYPERVISOR = "vbox" ]; then
+	su $OURVIRT_USER -c "rm -rf ~/VirtualBox\ VMs/$VM_NAME"
+else
+	rm -rf /etc/vservers/.defaults/vdirbase/$VM_NAME*
+	rm -rf /etc/vservers/$VM_NAME*
+fi
+
+exit $?
