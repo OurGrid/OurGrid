@@ -1,8 +1,33 @@
 <component>
+  
   <dependencySets>
     <dependencySet>
       <outputDirectory>/lib</outputDirectory>
       <scope>runtime</scope>
     </dependencySet>
   </dependencySets>
+  
+  <fileSets>
+  	
+  	<fileSet>
+  		<outputDirectory></outputDirectory>
+  		<includes>
+  			<include>log4j.cfg.xml</include>
+  			<include>COPYING*</include>
+  		</includes>
+  	</fileSet>
+  	
+  	<fileSet>
+  		<outputDirectory></outputDirectory>
+  		<directory>deployer/bin</directory>
+  		<includes>
+  			<include>testjvm</include>
+  		</includes>
+  	</fileSet>
+  	<fileSet>
+  		<outputDirectory>/etc/ourgrid/examples</outputDirectory>
+  		<directory>examples</directory>
+  	</fileSet>
+  </fileSets>
+  
 </component>
