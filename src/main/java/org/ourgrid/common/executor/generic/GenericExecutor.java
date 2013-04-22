@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Logger;
 import org.ourgrid.common.executor.Executor;
 import org.ourgrid.common.executor.ExecutorException;
 import org.ourgrid.common.executor.ExecutorHandle;
@@ -30,8 +31,10 @@ import org.ourgrid.worker.utils.RandomNumberUtil;
 
 import br.edu.ufcg.lsd.commune.container.logging.CommuneLogger;
 
-public class GenericExecutor implements Executor{
+public class GenericExecutor implements Executor {
 
+	private static final Logger LOGGER = Logger.getLogger(GenericExecutor.class);
+	
 	private static final long serialVersionUID = 34L;
 	private String vmName;
 	private HypervisorType hypervisorType;
@@ -48,18 +51,16 @@ public class GenericExecutor implements Executor{
 	private String workerStoragePath;
 	
 	private static int nextHandle = 0;
-	private transient final CommuneLogger logger;
 	private ExecutorResult executorResult;
 
 	public GenericExecutor(CommuneLogger logger) {
-		this.logger = logger;
 		this.ourVirt = new OurVirt();
 	}
 
 	@Override
 	public void setConfiguration(ExecutorConfiguration configuration) {
 
-		logger.debug("Setting up Generic Executor configuration.");
+		LOGGER.debug("Setting up Generic Executor configuration.");
 		
 		executorConfiguration = configuration;
 
@@ -70,7 +71,7 @@ public class GenericExecutor implements Executor{
 		snapshotName = executorConfiguration.getProperty(
 				GenericExecutorConfiguration.VM_SNAPSHOT_NAME.toString());
 		
-		logger.debug("Generic Executor virtual machine name: " + vmName + ", Hypervisor: "+hypervisorType);
+		LOGGER.debug("Generic Executor virtual machine name: " + vmName + ", Hypervisor: "+hypervisorType);
 		
 		virtualMachineConfiguration = new HashMap<String, String>();
 		virtualMachineConfiguration.put("user", executorConfiguration.getProperty(
@@ -83,8 +84,14 @@ public class GenericExecutor implements Executor{
 				GenericExecutorConfiguration.VM_OS.toString()));
 		virtualMachineConfiguration.put("osversion", executorConfiguration.getProperty(
 				GenericExecutorConfiguration.VM_OS_VERSION.toString()));
+		virtualMachineConfiguration.put("networktype", executorConfiguration.getProperty(
+				GenericExecutorConfiguration.VM_NETWORK_TYPE.toString()));
+		virtualMachineConfiguration.put("networkadaptername", executorConfiguration.getProperty(
+				GenericExecutorConfiguration.VM_NETWORK_ADAPTER_NAME.toString()));
+		virtualMachineConfiguration.put("pae.enabled", executorConfiguration.getProperty(
+				GenericExecutorConfiguration.VM_PAE_ENABLED.toString()));
 		
-		logger.debug("Generic Worker Guest OS: " + executorConfiguration.getProperty(
+		LOGGER.debug("Generic Worker Guest OS: " + executorConfiguration.getProperty(
 				GenericExecutorConfiguration.VM_OS.toString()));
 		
 		virtualMachineConfiguration.put("disktype", executorConfiguration.getProperty(
@@ -98,6 +105,8 @@ public class GenericExecutor implements Executor{
 		if (timeout != null) {
 			virtualMachineConfiguration.put("starttimeout", timeout);
 		}
+		
+		LOGGER.debug("Virtual machine configuration: " + virtualMachineConfiguration);
 
 		workerPlaypenPath = executorConfiguration.
 				getProperty(WorkerConstants.PROP_PLAYPEN_ROOT);
@@ -109,37 +118,39 @@ public class GenericExecutor implements Executor{
 		virtualMachineStoragePath = executorConfiguration.
 				getProperty(GenericExecutorConfiguration.GUEST_STORAGE_PATH.toString());
 		
-		logger.debug("Generic Worker established a connection to virtual machine." +
+		LOGGER.debug("Generic Worker established a connection to virtual machine." +
 				"Storage (HOST): " + workerStoragePath + ", Storage (GUEST): " + virtualMachineStoragePath);
-		logger.debug("Generic Worker established a connection to virtual machine." +
+		LOGGER.debug("Generic Worker established a connection to virtual machine." +
 				"Playpen (HOST): " + workerPlaypenPath + ", Playpen (GUEST): " + virtualMachinePlaypenPath);
 	}
 
 	@Override
 	public void prepareAllocation() throws ExecutorException {
 
-		logger.debug("Generic Executor is preparing allocation.");
+		LOGGER.debug("Generic Executor is preparing allocation.");
 		
 		try{
 			ourVirt.register(vmName, virtualMachineConfiguration);
 			ourVirt.create(hypervisorType, vmName);
 			restart();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e);
 			throw new ExecutorException("OurVirt: " + e.getMessage());
 		}
 	}
 
-	private void restart() throws Exception, ExecutorException {
+	private void restart() throws Exception {
 		VirtualMachineStatus status = ourVirt.status(hypervisorType, vmName);
 		if (status != VirtualMachineStatus.RUNNING) {
 
-			logger.debug("Virtual machine [ " + vmName + " ]: Status: " + status);
+			LOGGER.debug("Virtual machine [ " + vmName + " ]: Status: " + status);
 			
-			try{
+			try {
 				takeSnapshot();
-			}catch(SnapshotAlreadyExistsException snapshotAlreadyExistsException){
+			} catch(SnapshotAlreadyExistsException snapshotAlreadyExistsException) {
 				restoreSnapshot();
+			} catch (Exception e) {
+				LOGGER.warn(e);
 			}
 			
 			deleteSharedFolder(GenericExecutorConfiguration.PLAYPEN_SHARED_FOLDER);
@@ -152,8 +163,10 @@ public class GenericExecutor implements Executor{
 			
 			start();
 			
-			mountSharedFolder(GenericExecutorConfiguration.PLAYPEN_SHARED_FOLDER, workerPlaypenPath, virtualMachinePlaypenPath);
-			mountSharedFolder(GenericExecutorConfiguration.STORAGE_SHARED_FOLDER, workerStoragePath, virtualMachineStoragePath);
+			mountSharedFolder(GenericExecutorConfiguration.PLAYPEN_SHARED_FOLDER, workerPlaypenPath, 
+					virtualMachinePlaypenPath);
+			mountSharedFolder(GenericExecutorConfiguration.STORAGE_SHARED_FOLDER, workerStoragePath, 
+					virtualMachineStoragePath);
 		
 		} else {
 			stop(status);
@@ -162,41 +175,41 @@ public class GenericExecutor implements Executor{
 	}
 
 	private void stop(VirtualMachineStatus status) throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: was " + status +". Stopping.");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: was " + status +". Stopping.");
 		ourVirt.stop(hypervisorType, vmName);
 	}
 
 	private void start() throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: Starting.");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Starting.");
 		ourVirt.start(hypervisorType, vmName);
 	}
 
 	private void mountSharedFolder(String shareName, String hostPath, String guestPath) throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: Mounting shared folder " + shareName + ".\n" +
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Mounting shared folder " + shareName + ".\n" +
 				"Host Path: " + hostPath + "\nGuest Path: " + guestPath);
 		ourVirt.mountSharedFolder(hypervisorType, vmName, shareName, hostPath, guestPath);
 	}
 
 	private void restoreSnapshot() throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: " +
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: " +
 				"Has snapshot [ " + snapshotName + " ]. Restoring.");
 		ourVirt.restoreSnapshot(hypervisorType, vmName, snapshotName);
 	}
 
 	private void takeSnapshot() throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: " +
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: " +
 				"Taking snapshot [ " + snapshotName + " ].");
 		ourVirt.takeSnapshot(hypervisorType, vmName, snapshotName);
 	}
 
 	private void createSharedFolder(String shareName, String hostPath, String guestPath) throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: Creating shared folder " + shareName+".");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Creating shared folder " + shareName+".");
 		ourVirt.createSharedFolder(hypervisorType, vmName,	shareName,	
 				hostPath, guestPath);
 	}
 
 	private void deleteSharedFolder(String shareName) throws Exception {
-		logger.debug("Virtual machine [ " + vmName + " ]: Removing shared folder " + shareName+".");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Removing shared folder " + shareName+".");
 		ourVirt.deleteSharedFolder(hypervisorType, vmName,	shareName);
 	}
 	
@@ -204,7 +217,7 @@ public class GenericExecutor implements Executor{
 	public ExecutorHandle execute(String dirName, String command,
 			Map<String, String> envVars) throws ExecutorException {
 		
-		logger.debug("Virtual machine [ " + vmName + " ]: Executing command \""+command+"\".");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Executing command \""+command+"\".");
 		
 		try {
 			
@@ -238,7 +251,8 @@ public class GenericExecutor implements Executor{
 						);
 				
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
+			LOGGER.error(e);
 			throw new ExecutorException("OurVirt: " + e.getMessage());
 		}
 		
@@ -251,6 +265,7 @@ public class GenericExecutor implements Executor{
 		try {
 			return IOUtils.toString(new FileInputStream(new File(file).getAbsolutePath()));
 		} catch (Exception e) {
+			LOGGER.warn(e);
 			return "";
 		}
 	}
@@ -304,10 +319,11 @@ public class GenericExecutor implements Executor{
 		
 		try {
 			VirtualMachineStatus status = ourVirt.status(hypervisorType, vmName);
-			if ( status == VirtualMachineStatus.RUNNING ){
+			if (status == VirtualMachineStatus.RUNNING) {
 				stop(status);
 			}
 		} catch (Exception e) {
+			LOGGER.error(e);
 			throw new ExecutorException(e.getMessage());
 		}
 	}
@@ -315,7 +331,7 @@ public class GenericExecutor implements Executor{
 	@Override
 	public ExecutorResult getResult(ExecutorHandle handle)
 			throws ExecutorException {
-		logger.debug("Virtual machine [ " + vmName + " ]: Retrieving result of last command executed.");
+		LOGGER.debug("Virtual machine [ " + vmName + " ]: Retrieving result of last command executed.");
 		return this.executorResult;
 	}
 

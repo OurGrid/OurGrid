@@ -57,6 +57,9 @@ public class GenericExecutorConfiguration extends AbstractExecutorConfiguration 
 	public static final String VM_DISK_IMAGE_PATH = VM_PREFIX + "disk.path";
 	public static final String VM_HYPERVISOR_TYPE = VM_PREFIX + "hypervisor.type";
 	public static final String VM_START_TIMEOUT = VM_PREFIX + "start.timeout";
+	public static final String VM_NETWORK_TYPE = VM_PREFIX + "networktype";
+	public static final String VM_NETWORK_ADAPTER_NAME = VM_PREFIX + "networkadaptername";
+	public static final String VM_PAE_ENABLED = VM_PREFIX + "pae.enabled";
 	
 	/** DEFAULT PROPERTIES **/
 	
@@ -113,7 +116,10 @@ public class GenericExecutorConfiguration extends AbstractExecutorConfiguration 
 				VM_DISK_TYPE,
 				VM_DISK_IMAGE_PATH,
 				VM_HYPERVISOR_TYPE,
-				VM_START_TIMEOUT
+				VM_START_TIMEOUT,
+				VM_NETWORK_TYPE,
+				VM_NETWORK_ADAPTER_NAME,
+				VM_PAE_ENABLED
 				};
 	}
 	
