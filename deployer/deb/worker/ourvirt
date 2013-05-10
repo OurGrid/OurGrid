@@ -1,4 +1,5 @@
 #!/bin/bash
 OGLIB=/usr/lib/ourgrid
-java -Djava.ext.dirs=$OGLIB org/ourgrid/virt/Main $@
+export VBOX_HOME=/etc/ourgrid/vbox-bin
+java -Djava.ext.dirs=$OGLIB -Dvbox.home=$VBOX_HOME org/ourgrid/virt/Main $@
 exit $?

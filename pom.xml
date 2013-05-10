@@ -1980,7 +1980,17 @@
 		<dependency>
 			<groupId>org.ourgrid.ourvirt</groupId>
 			<artifactId>ourvirt</artifactId>
-			<version>1.0.2</version>
+			<version>1.0.3</version>
+		</dependency>
+		<dependency>
+			<groupId>vboxjxpcom</groupId>
+			<artifactId>vboxjxpcom</artifactId>
+			<version>4.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>sshj</groupId>
+			<artifactId>sshj</artifactId>
+			<version>0.8.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.swinglabs</groupId>
