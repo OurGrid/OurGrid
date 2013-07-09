@@ -1,0 +1,4 @@
+#!/bin/bash
+OGLIB=/usr/lib/ourgrid
+java -Djava.ext.dirs=$OGLIB org/ourgrid/virt/Main $@
+exit $?
