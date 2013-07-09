@@ -30,7 +30,8 @@ guicommand="gui"
 GUImain="org.ourgrid.worker.ui.async.Main"
 index=$2
 OGLIB="/usr/lib/ourgrid"
-OGROOT="/etc/ourgrid/worker-vbox"$index"/"
+OGROOT="/etc/ourgrid/worker-qemu"$index"/"
+QEMU_HOME="/etc/ourgrid/qemu"
 LOG4J="-Dlog4j.configuration=file"$OGROOT"log4j.cfg.xml"
 
 findogroot(){
@@ -49,7 +50,7 @@ findogroot(){
 #	
 #	PRGDIR=`dirname "$PRG"`
 #	OGROOT=`cd "$PRGDIR/" ; pwd`
-	export OGROOT="/etc/ourgrid/worker-vbox"$index"/"
+	export OGROOT="/etc/ourgrid/worker-qemu"$index"/"
 	if [ -z "$OGROOT" ]; then
 		echo "ERR_OGROOT_NOT_DEFINED"
 		return $ERR_OGROOT_NOT_DEFINED
@@ -110,13 +111,13 @@ execute() {
 	fi
 
 	if [ $INVOKED_BY_UAADMIN -eq 0 ]; then
-		$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command  &
+		java -Xmx1024m $LOG4J -Dqemu.home=$QEMU_HOME -classpath $CLASSPATH $wcmdname $command  &
 	    pid=$!
 	    sleep 7
 	else
 		# This is necessary for ssh not hang during uaadmin
 		# execution 
-		$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command </dev/null 1>/dev/null 2>&1 &
+		java -Xmx1024m $LOG4J -Dqemu.home=$QEMU_HOME -classpath $CLASSPATH $wcmdname $command </dev/null 1>/dev/null 2>&1 &
 	    pid=$!
 	    sleep 20
 	fi
@@ -131,21 +132,21 @@ execute() {
 # Show OurGrid Worker Status
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 status() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$statuscommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$statuscommand"
 	exit $?
 }
 
 # Stop OurGrid Worker
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stop() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$stopcommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$stopcommand"
 	exit $?
 }
 
 # Start Worker's Gui
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 gui() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$GUImain" "$guicommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$GUImain" "$guicommand"
 	exit $?
 }		
 
@@ -225,18 +226,6 @@ setclasspath() {
 		usage
 	fi
 	
-	testjvm
-	ret=$?
-	if [ $ret -ne $OK ]; then
-		printerrdescr $ERR_JAVA_NOT_FOUND
-		exit $errcode
-	fi
-	
-	APP_JAVA=`cat /usr/share/ourgrid/javalocation`
-	
-	PATH=$APP_JAVA:$PATH
-	export PATH
-
 	case "$COMMAND_NAME" in
 	start)
 		execute start
