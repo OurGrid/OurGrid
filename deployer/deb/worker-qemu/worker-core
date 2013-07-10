@@ -31,7 +31,7 @@ GUImain="org.ourgrid.worker.ui.async.Main"
 index=$2
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/worker-qemu"$index"/"
-QEMU_HOME="/etc/ourgrid/qemu"
+QEMU_HOME="/etc/ourgrid/qemu/bin"
 LOG4J="-Dlog4j.configuration=file"$OGROOT"log4j.cfg.xml"
 
 findogroot(){
