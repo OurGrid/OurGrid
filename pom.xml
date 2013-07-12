@@ -5,14 +5,14 @@
 	<artifactId>ourgrid</artifactId>
 	<packaging>jar</packaging>
 	<name>OurGrid</name>
-	<version>4.3.1</version>
+	<version>4.4.0</version>
 	<url>http://www.ourgrid.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<application.subversion.date>20120803</application.subversion.date>
 		<application.subversion>0.0.${application.subversion.date}</application.subversion>
-		<application.version>4.3.1</application.version>
+		<application.version>4.4.0</application.version>
 		<application.deb.version>${application.version}-build-${application.subversion.date}</application.deb.version>
 		<maven.test.skip>false</maven.test.skip>
 	</properties>
@@ -1980,7 +1980,7 @@
 		<dependency>
 			<groupId>org.ourgrid.ourvirt</groupId>
 			<artifactId>ourvirt</artifactId>
-			<version>1.0.4</version>
+			<version>1.0.5</version>
 		</dependency>
 		<dependency>
 			<groupId>vboxjxpcom</groupId>
