@@ -13,10 +13,9 @@ DESC="Starts the worker-qemu module of OurGrid(ourgrid.org)"
 NAME=worker
 DAEMON=/usr/bin/$NAME
 DAEMON_ARGS="start"
-PIDFILE=/var/run/$NAME.pid
+PIDPATH=/var/run/ourgrid
 SCRIPTNAME=/etc/init.d/$NAME
 PUSER=ourgrid
-
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -41,9 +40,9 @@ do_start()
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
 	
-	start-stop-daemon --start --quiet --chuid $PUSER --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
+	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON --test > /dev/null \
 		|| return 1
-	start-stop-daemon --start --quiet --chuid $PUSER --pidfile $PIDFILE --exec $DAEMON -- \
+	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON -- \
 		$DAEMON_ARGS \
 		|| return 2
 }
@@ -61,6 +60,11 @@ do_stop()
 	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON stop
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
+	
+    for PIDFILE in `ls $PIDPATH/worker*.pid`; do
+    	start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE 
+    	rm -f $PIDFILE
+    done
 
 	return "$RETVAL"
 }
