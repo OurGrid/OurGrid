@@ -1983,6 +1983,11 @@
 			<version>1.0.5</version>
 		</dependency>
 		<dependency>
+			<groupId>org.alfresco.jlan</groupId>
+			<artifactId>jlan</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
 			<groupId>vboxjxpcom</groupId>
 			<artifactId>vboxjxpcom</artifactId>
 			<version>4.2.0</version>
