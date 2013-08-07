@@ -57,6 +57,10 @@ public class LinuxXSessionIdlenessDetectorActionRequester
 
 		String idlenessDataStr = idlenessFileContent.get(0);
 		String[] idlenessData = idlenessDataStr.split(";");
+		if (idlenessData.length != 2) {
+			return getLastModification();
+		}
+		
 		lastModification = new Date(Long.parseLong(idlenessData[0]) * 1000);
 		Long idleTime = Long.parseLong(idlenessData[1]);
 		lastInput = new Date(lastModification.getTime() - idleTime);
