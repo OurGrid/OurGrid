@@ -4,7 +4,9 @@ check_idle() {
   while [ TRUE ]; do
     CURRENT_DATE=$(date +%s)
     IDLE_TIME=$(/etc/ourgrid/bin/xprintidle)
-    echo "$CURRENT_DATE;$IDLE_TIME" > /etc/ourgrid/idleness
+    if [ ! -z "$IDLE_TIME" ]; then
+    	echo "$CURRENT_DATE;$IDLE_TIME" > /etc/ourgrid/idleness
+    fi
     sleep 30
   done
 }
