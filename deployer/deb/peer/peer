@@ -118,13 +118,13 @@ setjavaoptions(){
 # Start OurGrid Peer GUI
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 gui() {
-	$APP_JAVA/java $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$GUImain" "$guicommand" &
+	java $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$GUImain" "$guicommand" &
 }
 
 # Starts OurGrid Peer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 start() {
-    $APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+    java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
     pid=$!
     sleep 7
 
@@ -138,14 +138,14 @@ start() {
 # Stop OurGrid Peer
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 stop() {
-	$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
+	java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
 
 }
 
 # Show OurGrid Peer Status
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 status() {
-	$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand"
+	java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand"
 	exit $?
 }
 
@@ -354,15 +354,6 @@ ret=$?
 
 if [ $ret -eq $OK ]; then
 
-	testjvm
-	ret=$?
-	if [ $ret -ne $OK ]; then
-		printerrdescr $ERR_JAVA_NOT_FOUND
-		exit $errcode
-	fi
-		
-	APP_JAVA=`cat /usr/share/ourgrid/javalocation`
-
 	case "$COMMAND_NAME" in
 		start)
 			start
@@ -381,25 +372,25 @@ if [ $ret -eq $OK ]; then
 			exit $?
 		;;
 		addbroker)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addbrokercommand" "$USER_NAME" "$USER_PASSWD"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addbrokercommand" "$USER_NAME" "$USER_PASSWD"
 		;;
 		removebroker)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removebrokercommand" "$USER_NAME"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removebrokercommand" "$USER_NAME"
 		;;
 		addworker)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addworkercommand" "$COMMAND_ARGS"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$addworkercommand" "$COMMAND_ARGS"
 		;;
 		removeworker)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removeworkercommand" "$COMMAND_ARGS"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$removeworkercommand" "$COMMAND_ARGS"
 		;;
 		setworkers)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$setworkerscommand" "$COMMAND_ARGS"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$setworkerscommand" "$COMMAND_ARGS"
 		;;
 		query)
-            $APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$querycommand" "$COMMAND_ARGS"
+            java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$querycommand" "$COMMAND_ARGS"
 		;;
 		signcertificate)
-			$APP_JAVA/java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$IssuedCertificateGenerator" "$CERTIFICATE_PATH" "$OGROOT/peer.properties" "$OUTPUT_CERTIFICATE_PATH"
+			java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$IssuedCertificateGenerator" "$CERTIFICATE_PATH" "$OGROOT/peer.properties" "$OUTPUT_CERTIFICATE_PATH"
  		;;
 		*) usage
 			exit $ret

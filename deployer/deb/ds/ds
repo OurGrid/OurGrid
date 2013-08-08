@@ -117,7 +117,7 @@ setjavaoptions(){
 # Starts OurGrid DiscoveryService
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 start() {
-	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+	java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
     pid=$!
     sleep 7
 
@@ -131,14 +131,14 @@ start() {
 # Stop OurGrid DiscoveryService
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 stop() {
-	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
+	java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
 
 }
 
 # Show OurGrid DiscoveryService Status
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 status() {
-	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand"
+	java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$statuscommand"
 	exit $?
 }
 
@@ -253,15 +253,6 @@ ret=$?
 
 if [ $ret -eq $OK ]; then
 
-	testjvm
-	ret=$?
-	if [ $ret -ne $OK ]; then
-		printerrdescr $ERR_JAVA_NOT_FOUND
-		exit $errcode
-	fi
-		
-	APP_JAVA=`cat /usr/share/ourgrid/javalocation`
-
 	case "$COMMAND_NAME" in
 		start)
 			start
@@ -276,7 +267,7 @@ if [ $ret -eq $OK ]; then
 			exit $?
 		;;
 		query)
-            $APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$querycommand" "$COMMAND_ARGS"
+            java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$querycommand" "$COMMAND_ARGS"
 		;;
 		*) usage
 			exit $ret

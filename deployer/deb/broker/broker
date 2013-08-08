@@ -72,7 +72,7 @@ setclasspath(){
 }
 
 start() {
-	$APP_JAVA/java $LOG4J -Xms64m -Xmx1024m  -cp .:/$OGLIB/* "$main" "$startcommand" &
+	java $LOG4J -Xms64m -Xmx1024m  -cp .:/$OGLIB/* "$main" "$startcommand" &
     pid=$!
     sleep 7
 
@@ -85,7 +85,7 @@ start() {
 
 # +++++  Stop Broker
 stop() {
-	$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$stopcommand" "$COMMAND_ARGS"
+	java $LOG4J -cp .:/$OGLIB/* "$main" "$stopcommand" "$COMMAND_ARGS"
 }
 
 printerrdescr(){
@@ -278,17 +278,8 @@ ret=$?
 
 if [ $ret -eq $OK ]; then
 
-	testjvm "$BROKERROOT/javalocation"
-	ret=$?
-	if [ $ret -ne $OK ]; then
-		printerrdescr $ERR_JAVA_NOT_FOUND
-		exit $errcode
-	fi
-		
-	APP_JAVA=`cat $BROKERROOT/javalocation`
-
 	#if [ "$COMMAND_NAME" = "start" ] || [ "$COMMAND_NAME" = "stop" ] || [ "$COMMAND_NAME" = "restart" ] || [ "$COMMAND_NAME" = "status" ] || [ "$COMMAND_NAME" = "addjob" ] || [ "$COMMAND_NAME" = "canceljob" ]  || [ "$COMMAND_NAME" = "waitforjob" ] ||  [ "$COMMAND_NAME" = "setgrid" ] || [ "COMMAND_NAME" = "clean" ] ; then
-	 #      	$APP_JAVA/java $LOG4J -Djava.ext.dirs="$OGLIB"
+	 #      	java $LOG4J -Djava.ext.dirs="$OGLIB"
 	#fi
 
 	case "$COMMAND_NAME" in
@@ -308,35 +299,35 @@ if [ $ret -eq $OK ]; then
 			;;
 		
 		status)
-    		$APP_JAVA/java $LOG4J -Xms64m -Xmx1024m $LOG4J -cp .:/$OGLIB/* "$main" "$statuscommand" "$COMMAND_ARGS" "$COMMAND_ARGS2" "$COMMAND_ARGS3"
+    		java $LOG4J -Xms64m -Xmx1024m $LOG4J -cp .:/$OGLIB/* "$main" "$statuscommand" "$COMMAND_ARGS" "$COMMAND_ARGS2" "$COMMAND_ARGS3"
 			;;
 
 		addjob)
-			$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$addjobcommand" "$COMMAND_ARGS"
+			java $LOG4J -cp .:/$OGLIB/* "$main" "$addjobcommand" "$COMMAND_ARGS"
 			;;	
 			
 		canceljob)
-			$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$canceljobcommand" "$COMMAND_ARGS"
+			java $LOG4J -cp .:/$OGLIB/* "$main" "$canceljobcommand" "$COMMAND_ARGS"
 			;;	
 			
 		waitforjob)
-			$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$waitforjobcommand" "$COMMAND_ARGS"
+			java $LOG4J -cp .:/$OGLIB/* "$main" "$waitforjobcommand" "$COMMAND_ARGS"
 			;;
 			
 		setgrid)
-			$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$setgridcommand" "$COMMAND_ARGS"
+			java $LOG4J -cp .:/$OGLIB/* "$main" "$setgridcommand" "$COMMAND_ARGS"
 			;;
 
 		gui)
 			echo "Starting Broker GUI"
-			$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$GUImain" "$gui" "$COMMAND_ARGS" &
+			java $LOG4J -cp .:/$OGLIB/* "$GUImain" "$gui" "$COMMAND_ARGS" &
 			;;
 
 		clean)
 			if [ $nargs -eq 1 ]; then
-				$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$cleancommand"
+				java $LOG4J -cp .:/$OGLIB/* "$main" "$cleancommand"
 			else
-				$APP_JAVA/java $LOG4J -cp .:/$OGLIB/* "$main" "$cleancommand" "$COMMAND_ARGS"
+				java $LOG4J -cp .:/$OGLIB/* "$main" "$cleancommand" "$COMMAND_ARGS"
 			fi
 			;;
 		*) usage

@@ -4,7 +4,7 @@ Architecture: all
 Section: main
 Priority: optional
 Size: 20
-Depends: default-jre (>=1.6) | java6-runtime, ourgrid-common, debconf (>=0.5)
+Depends: default-jre (>=1.6) | java6-runtime, ourgrid-commons, debconf (>=0.5)
 Maintainer: OurGrid Dev Team <ourgrid-dev-ml@ourgrid.org>
 Homepage: ourgrid.org
 Description: OurGrid is a free-to-join peer-to-peer computing grid that has been in production since December 2004. 
