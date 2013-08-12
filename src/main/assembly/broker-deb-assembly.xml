@@ -31,5 +31,9 @@
   			<exclude>*</exclude>
   		</excludes>
   	</fileSet>
+  	<fileSet>
+  		<outputDirectory>/etc/ourgrid/examples</outputDirectory>
+  		<directory>examples</directory>
+  	</fileSet>
   </fileSets>
 </assembly>
