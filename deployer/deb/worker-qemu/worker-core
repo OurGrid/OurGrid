@@ -33,7 +33,8 @@ OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/worker-qemu"$index"/"
 QEMU_HOME="/etc/ourgrid/qemu/bin"
 LOG4J="-Dlog4j.configuration=file"$OGROOT"log4j.cfg.xml"
-PIDFILE="/var/run/ourgrid/worker."$index".pid"
+PIDDIR="/var/run/ourgrid"
+PIDFILE=$PIDDIR"/worker."$index".pid"
 
 findogroot(){
 
@@ -123,6 +124,8 @@ execute() {
 	    sleep 20
 	fi
 	
+	mkdir -p $PIDDIR
+	chown -R ourgrid:ourgrid $PIDDIR 
 	echo $pid > $PIDFILE
 	
     if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
