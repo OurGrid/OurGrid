@@ -33,25 +33,9 @@ OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/worker-qemu"$index"/"
 QEMU_HOME="/etc/ourgrid/qemu/bin"
 LOG4J="-Dlog4j.configuration=file"$OGROOT"log4j.cfg.xml"
-PIDDIR="/var/run/ourgrid"
-PIDFILE=$PIDDIR"/worker."$index".pid"
+PIDFILE="/var/run/ourgrid/worker."$index".pid"
 
 findogroot(){
-
-#	PRG="$0"
-#
-#	while [ -h "$PRG" ]; do
-#		ls=`ls -ld "$PRG"`
-#		link=`expr "$ls" : '.*-> \(.*\)$'`
-#		if expr "$link" : '.*/.*' > /dev/null; then
-#			PRG="$link"
-#		else
-#			PRG=`dirname "$PRG"`/"$link"
-#		fi
-#	done
-#	
-#	PRGDIR=`dirname "$PRG"`
-#	OGROOT=`cd "$PRGDIR/" ; pwd`
 	export OGROOT="/etc/ourgrid/worker-qemu"$index"/"
 	if [ -z "$OGROOT" ]; then
 		echo "ERR_OGROOT_NOT_DEFINED"
@@ -124,8 +108,6 @@ execute() {
 	    sleep 20
 	fi
 	
-	mkdir -p $PIDDIR
-	chown -R ourgrid:ourgrid $PIDDIR 
 	echo $pid > $PIDFILE
 	
     if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
