@@ -1907,7 +1907,7 @@
 		<dependency>
 			<groupId>org.ourgrid.commune</groupId>
 			<artifactId>commune</artifactId>
-			<version>1.2</version>
+			<version>1.2.1</version>
 			<type>jar</type>
 		</dependency>
 
