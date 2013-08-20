@@ -32,7 +32,7 @@ index=$2
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/worker-qemu"$index"/"
 QEMU_HOME="/etc/ourgrid/qemu/bin"
-LOG4J="-Dlog4j.configuration=file"$OGROOT"log4j.cfg.xml"
+LOG4J="-Dlog4j.configuration=file:"$OGROOT"log4j.cfg.xml"
 PIDFILE="/var/run/ourgrid/worker."$index".pid"
 
 findogroot(){
