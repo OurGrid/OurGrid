@@ -1980,7 +1980,7 @@
 		<dependency>
 			<groupId>org.ourgrid.ourvirt</groupId>
 			<artifactId>ourvirt</artifactId>
-			<version>1.0.10</version>
+			<version>1.0.11</version>
 		</dependency>
 		<dependency>
 			<groupId>org.alfresco.jlan</groupId>
