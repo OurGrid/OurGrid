@@ -134,6 +134,11 @@ public class GenericExecutor implements Executor {
 			ourVirt.create(hypervisorType, vmName);
 			restart();
 		} catch (Exception e) {
+			try {
+				ourVirt.stop(hypervisorType, vmName);
+			} catch (Exception e1) {
+				// Best effort
+			}
 			LOGGER.error(e);
 			throw new ExecutorException("OurVirt: " + e.getMessage());
 		}
