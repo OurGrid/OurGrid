@@ -19,35 +19,20 @@
  */
 package org.ourgrid.worker.communication.actions.idlenessdetector;
 
-import org.ourgrid.common.util.OS;
+import java.io.Serializable;
 
+import org.ourgrid.common.internal.OurGridRequestControl;
+import org.ourgrid.worker.request.MacOSIdlenessDetectorActionRequestTO;
+
+import br.edu.ufcg.lsd.commune.container.servicemanager.ServiceManager;
 import br.edu.ufcg.lsd.commune.container.servicemanager.actions.RepeatedAction;
 
+/**
+ */
+public class MacOSIdlenessDetectorAction implements RepeatedAction {
 
-public class IdlenessDetectorActionFactory {
-
-	
-	public RepeatedAction createIdlenessDetectorAction() {
-		if (OS.isFamilyWindows()) {
-			return createWinIdlenessDetectorAction();
-		}
-		if (OS.isFamilyMac()) {
-			return createMacOSIdlenessDetectorAction();
-		}
-		return createLinuxIdlenessDetectorAction();
-		
+	public void run(Serializable handler, ServiceManager serviceManager) {
+		MacOSIdlenessDetectorActionRequestTO to = new MacOSIdlenessDetectorActionRequestTO();
+		OurGridRequestControl.getInstance().execute(to, serviceManager);
 	}
-	
-	private RepeatedAction createMacOSIdlenessDetectorAction() {
-		return new MacOSIdlenessDetectorAction();
-	}
-
-	public WinIdlenessDetectorAction createWinIdlenessDetectorAction() {
-		return new WinIdlenessDetectorAction();
-	}
-	
-	public LinuxIdlenessDetectorAction createLinuxIdlenessDetectorAction() {
-		return new LinuxIdlenessDetectorAction();
-	}
-	
 }
