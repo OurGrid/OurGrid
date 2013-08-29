@@ -38,6 +38,15 @@ PUSER=ourgrid
 # Source function library.
 [ -r /etc/rc.d/init.d/functions ] && . /etc/rc.d/init.d/functions
 
+log_daemon_msg() { 
+	logger "$@"; 
+}
+
+log_end_msg() {
+	[ $1 -eq 0 ] && RES=OK; 
+	logger ${RES:=FAIL}; 
+}
+
 #
 # Function that starts the daemon/service
 #
