@@ -10,7 +10,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<application.subversion.date>20120803</application.subversion.date>
+		<application.subversion.date>20130830</application.subversion.date>
 		<application.subversion>0.0.${application.subversion.date}</application.subversion>
 		<application.version>4.4.0</application.version>
 		<application.deb.version>${application.version}-build-${application.subversion.date}</application.deb.version>
