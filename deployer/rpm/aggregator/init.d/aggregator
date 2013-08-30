@@ -18,6 +18,7 @@ DAEMON=/usr/bin/$NAME
 DAEMON_ARGS="start"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
+PUSER=ourgrid
 
 [ -r /etc/default/aggregator ] && . /etc/default/aggregator
 
