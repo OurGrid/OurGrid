@@ -35,6 +35,7 @@ ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_OGROOT_NOT_DEFINED]="Variable O
 
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/aggregator"
+LOG4J="-Dlog4j.configuration=file:/etc/ourgrid/aggregator/log4j.cfg.xml"
 
 # Find OGROOT:                                          
 # $0 is the executable $OGROOT/ds or a link to it   
@@ -118,7 +119,7 @@ setjavaoptions(){
 # Starts OurGrid Aggregator
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 start() {
-	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+	$APP_JAVA/java -Xms64m -Xmx1024m "$LOG4J" -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
     pid=$!
     sleep 7
 
@@ -132,7 +133,7 @@ start() {
 # Stop OurGrid Aggregator
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 stop() {
-	$APP_JAVA/java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
+	$APP_JAVA/java -Xms64m -Xmx1024m "$LOG4J" -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
 
 }
 
