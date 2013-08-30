@@ -29,17 +29,9 @@
     	<source>deployer/deb/ds/default/ds</source>
     	<outputDirectory>/etc/default</outputDirectory>
     </file>
-<!--     <file> -->
-<!--     	<source>deployer/deb/ds/init.d/ds</source> -->
-<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
-<!--     </file> -->
     <file>
-    	<source>deployer/rpm/ds/init.d/ds-start</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
-    </file>
-    <file>
-    	<source>deployer/rpm/ds/init.d/ds-stop</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
+    	<source>deployer/rpm/ds/init.d/ds</source>
+    	<outputDirectory>/etc/ourgrid</outputDirectory>
     </file>
   </files>
   

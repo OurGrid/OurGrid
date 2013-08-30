@@ -28,11 +28,8 @@ echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PR
 
 
 chown ourgrid /usr/bin/peer
-chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
 
-chmod +x /etc/init.d/peer-start
-chmod +x /etc/init.d/peer-stop
-
-su - -c "chkconfig --level 2345 peer-start on"
-su - -c "chkconfig --level 016 peer-stop on"
+mv /etc/ourgrid/peer /etc/init.d/
+chmod +x /etc/init.d/peer
+chkconfig --add peer

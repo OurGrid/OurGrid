@@ -1,4 +1,8 @@
 #! /bin/sh
+# chkconfig: 345 85 60
+# description: Starts the Peer module of OurGrid(ourgrid.org)
+# processname: peer
+
 ### BEGIN INIT INFO
 # Provides:          peer
 # Required-Start:    $remote_fs $syslog
@@ -16,17 +20,7 @@ DAEMON_ARGS="start"
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
-
 [ -r /etc/default/peer ] && . /etc/default/peer
-
-is_true() {
-	if [ x = xtrue -o x = xyes -o x = x0 ] ; then
-		return 0
-	else
-		return 1
-	fi
-}
-
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
@@ -35,11 +29,23 @@ is_true() {
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 # Load the VERBOSE setting and other rcS variables
-. /lib/init/vars.sh
+[ -r /lib/init/vars.sh ] && . /lib/init/vars.sh
 
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. /lib/lsb/init-functions
+[ -r /lib/lsb/init-functions ] && . /lib/lsb/init-functions
+
+# Source function library.
+[ -r /etc/rc.d/init.d/functions ] && . /etc/rc.d/init.d/functions
+
+log_daemon_msg() { 
+	logger "$@"; 
+}
+
+log_end_msg() {
+	[ $1 -eq 0 ] && RES=OK; 
+	logger ${RES:=FAIL}; 
+}
 
 #
 # Function that starts the daemon/service
@@ -50,19 +56,8 @@ do_start()
 	#   0 if daemon has been started
 	#   1 if daemon was already running
 	#   2 if daemon could not be started
-	
-#  su - -c /usr/sbin/beefs start honeycomb beefs
-
-	if is_true  ; then
-		start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON --test > /dev/null \
-		|| return 1
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON -- \
-		$DAEMON_ARGS \
-		|| return 2
-	else
-		echo 
-		echo Peer not configured to start, please edit /etc/default/peer to enable
-	fi
+	daemon --user=$PUSER +19 $DAEMON start
+	return "$?"
 }
 
 #
@@ -75,14 +70,10 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $NAME
+	daemon --user=$PUSER $DAEMON stop
 	RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
-
-	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
-	[ "$?" = 2 ] && return 2
-	# Many daemons don't delete their pidfiles when they exit.
-	rm -f $PIDFILE
+	
 	return "$RETVAL"
 }
 

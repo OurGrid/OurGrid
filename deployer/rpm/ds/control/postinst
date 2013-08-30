@@ -21,13 +21,9 @@ echo "commune.privatekey="$DS_PRIVATEKEY >> $PROPERTIES_FILE
 echo "commune.publickey="$DS_PUBLICKEY >> $PROPERTIES_FILE
 echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
 
-su - -c "chkconfig --level 2345 ds-start on"
-su - -c "chkconfig --level 016 ds-stop on"
-
-chmod +x /etc/init.d/ds-start
-chmod +x /etc/init.d/ds-stop
-
+mv /etc/ourgrid/ds /etc/init.d/
+chmod +x /etc/init.d/ds
+chkconfig --add ds
 
 chown ourgrid /usr/bin/ds
-chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid

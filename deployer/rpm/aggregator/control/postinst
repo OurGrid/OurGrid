@@ -25,13 +25,9 @@ echo "commune.privatekey="$AGGREGATOR_PRIVATEKEY >> $PROPERTIES_FILE
 echo "commune.publickey="$AGGREGATOR_PUBLICKEY >> $PROPERTIES_FILE
 echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
 
-chmod +x /etc/init.d/aggregator-start
-chmod +x /etc/init.d/aggregator-stop
-
-su - -c "chkconfig --level 2345 aggregator-start on"
-su - -c "chkconfig --level 016 aggregator-stop on"
+mv /etc/ourgrid/aggregator /etc/init.d/
+chmod +x /etc/init.d/aggregator
+chkconfig --add aggregator
 
 chown ourgrid /usr/bin/aggregator
-chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
-

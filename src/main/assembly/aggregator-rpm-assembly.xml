@@ -29,17 +29,9 @@
     	<source>deployer/deb/aggregator/default/aggregator</source>
     	<outputDirectory>/etc/default</outputDirectory>
     </file>
-<!--     <file> -->
-<!--     	<source>deployer/deb/aggregator/init.d/aggregator</source> -->
-<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
-<!--     </file> -->
     <file>
-    	<source>deployer/rpm/aggregator/init.d/aggregator-start</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
-    </file>
-    <file>
-    	<source>deployer/rpm/aggregator/init.d/aggregator-stop</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
+    	<source>deployer/rpm/aggregator/init.d/aggregator</source>
+    	<outputDirectory>/etc/ourgrid</outputDirectory>
     </file>
   </files>
   

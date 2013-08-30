@@ -29,17 +29,9 @@
     	<source>deployer/deb/peer/default/peer</source>
     	<outputDirectory>/etc/default</outputDirectory>
     </file>
-<!--     <file> -->
-<!--     	<source>deployer/deb/peer/init.d/peer</source> -->
-<!--     	<outputDirectory>/etc/init.d</outputDirectory> -->
-<!--     </file> -->
     <file>
-    	<source>deployer/rpm/peer/init.d/peer-start</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
-    </file>
-    <file>
-    	<source>deployer/rpm/peer/init.d/peer-stop</source>
-    	<outputDirectory>/etc/init.d</outputDirectory>
+    	<source>deployer/rpm/peer/init.d/peer</source>
+    	<outputDirectory>/etc/ourgrid</outputDirectory>
     </file>
   </files>
   
