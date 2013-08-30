@@ -25,7 +25,8 @@ echo "commune.privatekey="$AGGREGATOR_PRIVATEKEY >> $PROPERTIES_FILE
 echo "commune.publickey="$AGGREGATOR_PUBLICKEY >> $PROPERTIES_FILE
 echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
 
-mv /etc/ourgrid/aggregator /etc/init.d/
+mv /etc/ourgrid/tmp_init.d/aggregator /etc/init.d/
+rm -rf /etc/ourgrid/tmp_init.d
 chmod +x /etc/init.d/aggregator
 chkconfig --add aggregator
 

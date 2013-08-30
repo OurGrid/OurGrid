@@ -31,7 +31,7 @@
     </file>
     <file>
     	<source>deployer/rpm/aggregator/init.d/aggregator</source>
-    	<outputDirectory>/etc/ourgrid</outputDirectory>
+    	<outputDirectory>/etc/ourgrid/tmp_init.d</outputDirectory>
     </file>
   </files>
   

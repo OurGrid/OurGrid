@@ -21,7 +21,8 @@ echo "commune.privatekey="$DS_PRIVATEKEY >> $PROPERTIES_FILE
 echo "commune.publickey="$DS_PUBLICKEY >> $PROPERTIES_FILE
 echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
 
-mv /etc/ourgrid/ds /etc/init.d/
+mv /etc/ourgrid/tmp_init.d/ds /etc/init.d/
+rm -rf /etc/ourgrid/tmp_init.d
 chmod +x /etc/init.d/ds
 chkconfig --add ds
 
