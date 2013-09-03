@@ -32,6 +32,7 @@ index=$2
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/worker"$index"/"
 LOG4J="-Dlog4j.configuration=file:"$OGROOT"log4j.cfg.xml"
+PIDFILE="/var/run/ourgrid/worker."$index".pid"
 
 findogroot(){
 
@@ -110,16 +111,18 @@ execute() {
 	fi
 
 	if [ $INVOKED_BY_UAADMIN -eq 0 ]; then
-		$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command  &
+		java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command  &
 	    pid=$!
 	    sleep 7
 	else
 		# This is necessary for ssh not hang during uaadmin
 		# execution 
-		$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command </dev/null 1>/dev/null 2>&1 &
+		java -Xmx1024m $LOG4J -classpath $CLASSPATH $wcmdname $command </dev/null 1>/dev/null 2>&1 &
 	    pid=$!
 	    sleep 20
 	fi
+	
+	echo $pid > $PIDFILE
 	
     if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
     then
@@ -131,21 +134,21 @@ execute() {
 # Show OurGrid Worker Status
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 status() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$statuscommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$statuscommand"
 	exit $?
 }
 
 # Stop OurGrid Worker
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 stop() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$stopcommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$commandmanager" "$stopcommand"
 	exit $?
 }
 
 # Start Worker's Gui
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 gui() {
-	$APP_JAVA/java -Xmx1024m $LOG4J -classpath $CLASSPATH "$GUImain" "$guicommand"
+	java -Xmx1024m $LOG4J -classpath $CLASSPATH "$GUImain" "$guicommand"
 	exit $?
 }		
 
@@ -225,18 +228,6 @@ setclasspath() {
 		usage
 	fi
 	
-	testjvm
-	ret=$?
-	if [ $ret -ne $OK ]; then
-		printerrdescr $ERR_JAVA_NOT_FOUND
-		exit $errcode
-	fi
-	
-	APP_JAVA=`cat /usr/share/ourgrid/javalocation`
-	
-	PATH=$APP_JAVA:$PATH
-	export PATH
-
 	case "$COMMAND_NAME" in
 	start)
 		execute start
