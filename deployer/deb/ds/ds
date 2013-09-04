@@ -35,6 +35,8 @@ ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_OGROOT_NOT_DEFINED]="Variable O
 
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/ds"
+LOG4J="-Dlog4j.configuration=file:/etc/ourgrid/ds/log4j.cfg.xml"
+PIDFILE="/var/run/ourgrid/ds.pid"
 
 # Find OGROOT:                                          
 # $0 is the executable $OGROOT/ds or a link to it   
@@ -117,9 +119,11 @@ setjavaoptions(){
 # Starts OurGrid DiscoveryService
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 start() {
-	java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
+	java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
     pid=$!
     sleep 7
+    
+    echo $pid > $PIDFILE
 
     if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
     then
@@ -131,7 +135,7 @@ start() {
 # Stop OurGrid DiscoveryService
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 stop() {
-	java -Xms64m -Xmx1024m -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
+	java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$stopcommand"
 
 }
 

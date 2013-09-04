@@ -1,16 +1,8 @@
 #!/bin/bash
-# Source debconf library.
-. /usr/share/debconf/confmodule
-
-db_get ${package.name}/username
 USERNAME=$(hostname)
-db_get ${package.name}/servername
 SERVERNAME="xmpp.ourgrid.org"
-db_get ${package.name}/dsusername
 DSUSERNAME="lsd-ds"
-db_get ${package.name}/dsservername
 DSSERVERNAME="xmpp.ourgrid.org"
-db_get ${package.name}/password
 PASSWORD="xmpp-password"
 
 PROPERTIES_FILE=/etc/ourgrid/aggregator/aggregator.properties
@@ -34,9 +26,10 @@ echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PR
 chmod +x /etc/init.d/aggregator
 update-rc.d aggregator defaults
 
+# Creating log directory and changing owner to OurGrid
+mkdir -p /var/log/ourgrid
+chown -R ourgrid:ourgrid /var/log/ourgrid
 
 chown ourgrid /usr/bin/aggregator
 chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
-
-db_purge

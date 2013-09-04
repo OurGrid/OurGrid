@@ -1,13 +1,7 @@
 #!/bin/bash
-# Source debconf library.
-. /usr/share/debconf/confmodule
-
-db_get ${package.name}/username
-USERNAME="$RET"
-db_get ${package.name}/servername
-SERVERNAME="$RET"
-db_get ${package.name}/password
-PASSWORD="$RET"
+USERNAME=$(hostname)
+SERVERNAME="xmpp.ourgrid.org"
+PASSWORD="xmpp-password"
 
 PROPERTIES_FILE=/etc/ourgrid/ds/ds.properties
 
@@ -25,9 +19,12 @@ echo "commune.privatekey="$DS_PRIVATEKEY >> $PROPERTIES_FILE
 echo "commune.publickey="$DS_PUBLICKEY >> $PROPERTIES_FILE
 echo "commune.certification.file.mycertificatefilepath="$CERTIFICATE_FILE >> $PROPERTIES_FILE
 
-
 chmod +x /etc/init.d/ds
 update-rc.d ds defaults
+
+# Creating log directory and changing owner to OurGrid
+mkdir -p /var/log/ourgrid
+chown -R ourgrid:ourgrid /var/log/ourgrid
 
 chown ourgrid /usr/bin/ds
 chown ourgrid /usr/share/ourgrid
