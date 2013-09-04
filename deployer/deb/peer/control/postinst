@@ -38,7 +38,4 @@ chown ourgrid /usr/bin/peer
 chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
 
-update-rc.d peer-start start 20 2 3 4 5 .
-update-rc.d peer-stop stop 20 0 1 6 .
-
 db_purge
