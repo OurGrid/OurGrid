@@ -36,6 +36,7 @@ ErrDescr=([$ERR_STD_MISUSE]="Syntax error" [$ERR_OGROOT_NOT_DEFINED]="Variable O
 OGLIB="/usr/lib/ourgrid"
 OGROOT="/etc/ourgrid/peer"
 LOG4J="-Dlog4j.configuration=file:/etc/ourgrid/peer/log4j.cfg.xml"
+PIDFILE="/var/run/ourgrid/peer.pid"
 
 # Find OGROOT:                                          
 # $0 is the executable $OGROOT/peer or a link to it   
@@ -127,6 +128,8 @@ start() {
     java -Xms64m -Xmx1024m $LOG4J -classpath "$CLASSPATH" "$JAVAOPTIONS" "$main" "$startcommand" &
     pid=$!
     sleep 7
+    
+    echo $pid > $PIDFILE
 
     if [ `ps -p $pid >/dev/null; echo $?` -ne 0 ]
     then

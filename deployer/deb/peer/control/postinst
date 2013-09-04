@@ -1,12 +1,6 @@
 #!/bin/bash
-# Source debconf library.
-. /usr/share/debconf/confmodule
-
-db_get ${package.name}/username
 USERNAME=$(hostname)
-db_get ${package.name}/servername
 SERVERNAME="xmpp.ourgrid.org"
-db_get ${package.name}/password
 PASSWORD="xmpp-password"
 
 PROPERTIES_FILE=/etc/ourgrid/peer/peer.properties
@@ -33,6 +27,10 @@ fi
 
 chmod +x /etc/init.d/peer
 update-rc.d peer defaults
+
+# Creating log directory and changing owner to OurGrid
+mkdir -p /var/log/ourgrid
+chown -R ourgrid:ourgrid /var/log/ourgrid
 
 chown ourgrid /usr/bin/peer
 chown ourgrid /usr/share/ourgrid
