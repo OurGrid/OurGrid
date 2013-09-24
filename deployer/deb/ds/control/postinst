@@ -29,5 +29,3 @@ chown -R ourgrid:ourgrid /var/log/ourgrid
 chown ourgrid /usr/bin/ds
 chown ourgrid /usr/share/ourgrid
 chown -R ourgrid /etc/ourgrid
-
-db_purge
