@@ -76,13 +76,6 @@ public class StopWorkingRequester implements RequesterIF<StopWorkingRequestTO> {
 		}
 		
 		boolean isWorkingState = workerStatusDAO.isWorkingState();
-		if (!isWorkingState) {
-			responses.add(new LoggerResponseTO(WorkerManagementControllerMessages.
-					getStopWorkingOnNotWorkingWorkerMessage(), 
-					LoggerResponseTO.WARN));
-
-			return responses;
-		}
 
 		WorkerController.getInstance().interruptWorking(responses, true);
 
