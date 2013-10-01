@@ -5,7 +5,7 @@
 	<artifactId>ourgrid</artifactId>
 	<packaging>jar</packaging>
 	<name>OurGrid</name>
-	<version>4.4.0</version>
+	<version>4.4.1</version>
 	<url>http://www.ourgrid.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -1907,7 +1907,7 @@
 		<dependency>
 			<groupId>org.ourgrid.commune</groupId>
 			<artifactId>commune</artifactId>
-			<version>1.2.2</version>
+			<version>1.2.3</version>
 			<type>jar</type>
 		</dependency>
 
