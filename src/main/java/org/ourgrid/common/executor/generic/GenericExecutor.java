@@ -246,10 +246,6 @@ public class GenericExecutor implements Executor {
 				String outputRandom = random();
 				String outputPrefix =  playpenOnGuest + "/" + outputRandom;
 				
-				ExecutionResult lsResult = ourVirt.exec(hypervisorType, vmName,"/bin/ls -la " + playpenOnGuest);
-				LOGGER.info("Playpen contents. Stdout: " + lsResult.getStdOut() + ", stderr: " + 
-						lsResult.getStdErr() + ", exit: " + lsResult.getReturnValue());
-				
 				ExecutionResult result = ourVirt.exec(hypervisorType, vmName, 
 						"/bin/bash -c \"/bin/bash " + scriptPath + " 2> " + outputPrefix + "-err 1> " + outputPrefix + "-out \"");
 				
