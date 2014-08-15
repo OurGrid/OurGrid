@@ -58,16 +58,13 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --start --quiet --chuid $PUSER --exec $DAEMON stop
-	RETVAL="$?"
-	[ "$RETVAL" = 2 ] && return 2
-	
-    for PIDFILE in `ls $PIDPATH/worker*.pid`; do
-    	start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE 
-    	rm -f $PIDFILE
-    done
 
-	return "$RETVAL"
+        for PIDFILE in `ls $PIDPATH/worker*.pid`; do
+    	    start-stop-daemon --stop --quiet --oknodo --retry=0/5/KILL/5 --pidfile $PIDFILE  || true
+    	    rm -f $PIDFILE
+        done
+
+	return 0
 }
 
 case "$1" in
